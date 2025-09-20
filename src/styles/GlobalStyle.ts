@@ -5,11 +5,17 @@ import { createGlobalStyle } from "styled-components";
  */
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: Netflix Sans;
+    src: url("/fonts/netflix-sans-core-variable-full.woff2") format('woff2');
+  }
+
+
   html, body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
   }
 
   *,
