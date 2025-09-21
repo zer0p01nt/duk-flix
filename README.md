@@ -18,7 +18,6 @@ npm run dev
 - 이슈 기능은 자유롭게 쓰기
 - PR 템플릿 최대한 맞춰서 쓰기 (자동으로 안 뜨면 알려주세요!)
 - 전역 css 파일의 `:root` 변수처럼 추가할 게 있다면 `src/styles/theme.ts` 파일에 추가하기!
-- Tanstack Query 세팅은 추후 추가 예정 
 
 
 ## 역할 분담
