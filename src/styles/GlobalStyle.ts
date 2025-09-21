@@ -5,18 +5,18 @@ import { createGlobalStyle } from "styled-components";
  */
 
 const GlobalStyle = createGlobalStyle`
-
-  /* theme 파일 대신 일단 :root에 css 변수 저장 */
-  :root {
-    --red1: rgb(229, 9, 20);
-    --red1-hover: rgb(193, 17, 25);
+  @font-face {
+    font-family: Netflix Sans;
+    src: url("/fonts/netflix-sans-core-variable-full.woff2") format('woff2');
   }
+
 
   html, body {
     box-sizing: border-box;
+    width: 100%;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
   }
 
   *,

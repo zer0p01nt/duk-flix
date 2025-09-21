@@ -1,11 +1,19 @@
 import GlobalStyle from "@/styles/GlobalStyle";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./styles/theme";
+import { Route, Routes } from "react-router-dom";
+import Welcome from "./pages/Welcome/Welcome";
+import Login from "./pages/Login/Login";
 
 function App(): React.JSX.Element {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <div>🦁프론트 1팀 클론코딩 레포지토리 입니다.🦁</div>
-    </>
+      <Routes>
+        <Route index element={<Welcome />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
 
