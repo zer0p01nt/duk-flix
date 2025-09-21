@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
 
   html, body {
     box-sizing: border-box;
+    width: 100%;
     margin: 0;
     padding: 0;
     font-family: Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
