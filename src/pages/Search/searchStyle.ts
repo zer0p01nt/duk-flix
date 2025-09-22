@@ -2,8 +2,7 @@ import styled from "styled-components";
 
 /* 페이지 & 공통 */
 export const Page = styled.div`
-background-color: #434343ff;
-  /* background: #000; */
+  background: #141414;
   color: #fff;
   min-height: 100dvh;
   width: 100%;
@@ -141,6 +140,13 @@ export const Searchimg = styled.div`
   border-radius: 999px;
 `;
 
+export const SearchDel = styled.div`
+font-size: 28px;
+margin-right: 2px;
+cursor: pointer;
+`;
+
+
 // 반응형 메뉴바
 export const SearchNav = styled.div`
   font-size: clamp(8px, 2vw, 14px);
@@ -192,4 +198,127 @@ export const DropdownIcon = styled.div`
     position: absolute;
     top: -16px;
     width: 0;
+`;
+// 헤더끝
+
+
+// 메인 공통
+export const main = styled.div`
+/* display: none; */
+`;
+
+// 추천
+export const RecommendBox = styled.div`
+display: flex;
+margin: 20px 30px 0 50px;
+`;
+export const RecommendTitle = styled.div`
+  font-size: clamp(14px, 1.2vw, 16px);
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+`;
+export const Recommend = styled.div`
+margin-left: 10px;
+display: flex;
+    flex-flow: wrap;
+gap: 10px;
+width: 100%;
+`;
+export const RecommendIcon = styled.div`
+  font-size: clamp(14px, 1.2vw, 17px);
+  border-right: 1px solid  rgba(255, 255, 255, 0.5);
+  padding-right: 10px;
+  &:last-child {
+    border-right: none;
+    padding-left: 0;
+  }
+  cursor: pointer;
+  &:hover{
+    color: red;
+  }
+`;
+
+
+// 추천 영화
+export const ReMovie = styled.div`
+margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const MovieGrid = styled.div`
+  display: grid;
+  gap: 12px;
+  margin: 0 60px;
+
+/* 2 */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+/* 개수 조정 */
+  @media (min-width: 700px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (min-width: 1000px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (min-width: 1300px) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+`;
+
+export const Movie = styled.div`
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  aspect-ratio: 16 / 10;
+  background: #111;
+`;
+
+/* 링크(카드 전체 클릭) */
+export const MovieLink = styled.a`
+  display: block;
+  width: 100%;
+  height: 100%;
+`;
+
+/* 포스터 이미지 */
+export const Poster = styled.img`
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
+`;
+
+
+// 결과 없음 페이지
+export const text = styled.div`
+text-align: center;
+margin-top: 60px;
+`;
+
+export const NoSearch = styled.div`
+display: inline-block;
+text-align: left;
+`;
+
+export const NoSearchTitle = styled.div`
+`;
+export const ReSearch = styled.div`
+margin: 13px 0;
+`;
+export const ReSearchUl = styled.ul`
+margin-left: 40px;
+`;
+export const ReSearchLi = styled.li`
+list-style-type: disc;
+`;
+
+
+// 
+export const ReOther = styled.div`
+font-size: 23px;
+margin: 0 54px 10px 54px;
 `;
