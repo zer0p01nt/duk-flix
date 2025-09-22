@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 /* 페이지 & 공통 */
 export const Page = styled.div`
-background-color: #fff;
+background-color: #434343ff;
   /* background: #000; */
   color: #fff;
   min-height: 100dvh;
@@ -20,8 +20,8 @@ export const HeaderBar = styled.header`
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
-  padding: 16px 32px;
+  gap: 20px;
+  padding: 16px 42px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
 `;
 
@@ -32,8 +32,13 @@ export const Logo = styled.div`
 `;
 
 export const LogoImg = styled.img`
-  height: 26px;
+  height: 45px;
   width: auto;
+
+  @media (max-width: 642px) {
+    height: 30px;
+      width: auto;
+  }
 `;
 
 export const Nav = styled.nav`
@@ -42,6 +47,10 @@ export const Nav = styled.nav`
   align-items: center;
   font-size: 14px;
   opacity: 0.95;
+
+@media (max-width: 841px) {
+  display: none;
+}
 `;
 
 export const NavItem = styled.button`
@@ -53,6 +62,7 @@ export const NavItem = styled.button`
   &:hover {
     opacity: 0.7;
   }
+  font-size: clamp(8px, 1.3vw, 14px);
 `;
 
 export const HeaderActions = styled.div`
@@ -106,7 +116,6 @@ export const Avatar = styled.div`
 
 // 검색
 export const SearchBox = styled.input`
-  /* background-color:; */
   width: 230px;
   border-radius: 0%;
   background-color: #000;
@@ -118,10 +127,8 @@ export const SearchBox = styled.input`
 export const SearchBtn = styled.div`
   background-color: #000;
   border: 1px solid #fff;
-  /* width: 100%; */
   display: flex;
   justify-content: center;
-  /* display: none; */
 `;
 
 export const Searchimg = styled.div`
@@ -134,7 +141,55 @@ export const Searchimg = styled.div`
   border-radius: 999px;
 `;
 
-// 검색 아이콘 클릭시 모션
+// 반응형 메뉴바
+export const SearchNav = styled.div`
+  font-size: clamp(8px, 2vw, 14px);
+  cursor: pointer;
+`;
 
+export const Dropdown = styled.div`
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.54);
+    border: 1px solid hsla(0, 0%, 100%, .15);
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 21px;
+    text-align: center;
+margin-left: -86px;
+    border-top: 2px solid  #e5e5e5;
 
-// 네브바 글씨크기, 로고이미지 반응형, 화면조정 사라지게, 메뉴바 생성, 아이콘은 크기 그대로
+    width: 200px;
+        top: 90px;
+`;
+
+export const Ul = styled.ul`
+display: none;
+@media (max-width: 841px) {
+  display: block;
+}
+`;
+export const Li = styled.li`
+    display: list-item;
+    unicode-bidi: isolate;
+`;
+export const DropdownUl = styled.ul`
+
+`;
+export const DropdownLi = styled.li`
+padding: 15px 0;
+&:hover{
+  background-color:  rgba(71, 71, 71, 0.17);
+}
+`;
+
+export const DropdownIcon = styled.div`
+    border: 7px solid transparent;
+    border-bottom-color: #e5e5e5;
+    height: 0;
+    left: 50%;
+    margin-left: -7px;
+    position: absolute;
+    top: -16px;
+    width: 0;
+`;

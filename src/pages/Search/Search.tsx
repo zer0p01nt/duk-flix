@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import * as S from "./searchStyle";
-// import mainbackground from "@/assets/main-background.webp";
 import logo from "@/assets/Netflix_Logo_RGB.png";
-import { useState, useRef, useEffect } from "react"; //추가
+import { useState, useRef, useEffect } from "react";
 
 
 export default function Search(): React.JSX.Element {
   const navigate = useNavigate();
-  const [showSearch, setShowSearch] = useState(false); //추가
+  const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+    const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLLIElement>(null);
 
 
 
@@ -16,13 +18,26 @@ export default function Search(): React.JSX.Element {
 useEffect(() => {
   const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
-      setShowSearch(false); // 바깥 클릭 시 닫기
+      setShowSearch(false);
     }
   };
 
   if (showSearch) document.addEventListener("mousedown", handleClickOutside);
   return () => document.removeEventListener("mousedown", handleClickOutside);
 }, [showSearch]);
+
+
+  // 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
 
   return (
     <S.Page>
@@ -31,6 +46,41 @@ useEffect(() => {
         <S.Logo>
           <S.LogoImg src={logo} alt="Netflix" />
         </S.Logo>
+
+        {/* 메뉴 */}
+        <S.Ul>
+          <S.Li ref={dropdownRef}>
+            <S.SearchNav onClick={() => setOpen((prev) => !prev)}>
+              메뉴 ▼
+            </S.SearchNav>
+
+            {open && (
+              <S.Dropdown >
+                <S.DropdownIcon>
+                </S.DropdownIcon>
+              <S.DropdownUl>
+                <S.DropdownLi onClick={() => navigate("/")}>
+                  홈
+                </S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/series")}>
+                  시리즈
+                </S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/movies")}>
+                  영화
+                </S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/new")}>
+                  NEW & 인기
+                </S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/my-list")}>
+                  내가 찜한 리스트
+                </S.DropdownLi>
+              </S.DropdownUl>
+            </S.Dropdown>
+        )}
+          </S.Li>
+        </S.Ul>
+
+      {/* 네브바 */}
         <S.Nav>
           <S.NavItem onClick={() => navigate("/")}>홈</S.NavItem>
           <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
