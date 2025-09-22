@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Welcome from "./pages/Welcome/Welcome";
 import Login from "./pages/Login/Login";
+// 검색페이지
+import Search from "./pages/Search/Search";
 
 const qc = new QueryClient();
 
@@ -17,6 +19,7 @@ function App(): React.JSX.Element {
         <Routes>
           <Route index element={<Welcome />} />
           <Route path='/login' element={<Login />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </ThemeProvider>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
