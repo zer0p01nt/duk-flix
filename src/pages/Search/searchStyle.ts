@@ -1,0 +1,140 @@
+import styled from "styled-components";
+
+/* 페이지 & 공통 */
+export const Page = styled.div`
+background-color: #fff;
+  /* background: #000; */
+  color: #fff;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+`;
+
+/* 헤더 */
+export const HeaderBar = styled.header`
+  position: sticky;
+  width: 100%;
+  height: 80px;
+  top: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+`;
+
+export const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const LogoImg = styled.img`
+  height: 26px;
+  width: auto;
+`;
+
+export const Nav = styled.nav`
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  font-size: 14px;
+  opacity: 0.95;
+`;
+
+export const NavItem = styled.button`
+  background: none;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px 0;
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+export const HeaderActions = styled.div`
+  display: flex;
+  gap: 14px;
+  align-items: center;
+`;
+
+export const Svg = styled.svg`
+  width: 20px;
+  height: 20px;
+  color: #fff; /* path의 fill="currentColor"와 연결됨 */
+`;
+
+export const IconBox = styled.div`
+  width: 28px;
+  margin: 5px 0;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  &:hover{
+    cursor: pointer;
+  }
+`;
+
+export const SearchIconBox = styled.div`
+  width: 28px;
+  margin: 5px 0;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  &:hover{
+    cursor: pointer;
+  }
+`;
+
+export const Avatar = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 30%;
+  background: #9c88ff;
+    &:hover{
+    cursor: pointer;
+  }
+`;
+
+
+// 검색
+export const SearchBox = styled.input`
+  /* background-color:; */
+  width: 230px;
+  border-radius: 0%;
+  background-color: #000;
+  border: none;
+  color: #fff;
+  outline: none;
+`;
+
+export const SearchBtn = styled.div`
+  background-color: #000;
+  border: 1px solid #fff;
+  /* width: 100%; */
+  display: flex;
+  justify-content: center;
+  /* display: none; */
+`;
+
+export const Searchimg = styled.div`
+  width: 28px;
+  margin: 5px 0;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+`;
+
+// 검색 아이콘 클릭시 모션
+
+
+// 네브바 글씨크기, 로고이미지 반응형, 화면조정 사라지게, 메뉴바 생성, 아이콘은 크기 그대로
