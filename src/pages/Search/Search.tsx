@@ -56,7 +56,7 @@ const [error, setError] = useState<string | null>(null);
 useEffect(() => {
   const q = query.trim();
 
-    setBannerMode("none"); 
+  setBannerMode("none"); 
   setRelated([]);            
   setRelatedLoading(false);
 
