@@ -55,6 +55,11 @@ const [error, setError] = useState<string | null>(null);
 
 useEffect(() => {
   const q = query.trim();
+
+    setBannerMode("none"); 
+  setRelated([]);            
+  setRelatedLoading(false);
+
   if (!q) {
     setMovies([]);
     setError(null);
@@ -236,7 +241,7 @@ const [bannerLabel, setBannerLabel] = useState<string>("");
     !error &&
     movies.length === 0;
 
-    
+
   return (
     <S.Page>
       {/* 헤더 */}
