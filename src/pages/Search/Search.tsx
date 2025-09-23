@@ -98,20 +98,26 @@ useEffect(() => {
   const timer = setTimeout(async () => {
     setSugLoading(true);
     try {
-      // 1) 제목/시리즈 후보
       const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(q)}&page=1&include_adult=false`;
       const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
       const titleData = await titleRes.json().catch(() => ({}));
 
-const titleSugs: Suggestion[] = ((titleData.results ?? []) as MultiSearchItem[])
-  .filter((it) => it.media_type === "movie" || it.media_type === "tv")
-  .slice(0, 6)
-  .map((it) => ({
-    type: "title" as const,
-    id: it.id,
-    label: it.title || it.name || "",
-    media: it.media_type,
-  }));
+// 1) 타입 가드 추가
+const isMovieOrTv = (x: MultiSearchItem): x is MultiSearchItem & { media_type: "movie" | "tv" } =>
+  x.media_type === "movie" || x.media_type === "tv";
+
+// 2) filter에 타입 가드 사용
+const titleSugs: Suggestion[] =
+  ((titleData.results ?? []) as MultiSearchItem[])
+    .filter(isMovieOrTv) 
+    .slice(0, 6)
+    .map((it) => ({
+      type: "title" as const,
+      id: it.id,
+      label: it.title || it.name || "",
+      media: it.media_type,
+    }));
+
 
       // 2) 키워드(분위기) 후보
       const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&page=1`;
@@ -211,13 +217,26 @@ useEffect(() => {
 const [suggests, setSuggests] = useState<Suggestion[]>([]);
 const [sugLoading, setSugLoading] = useState(false);
 
-// 추천 클릭 후 보여줄 “관련작” 그리드
+// 추천키워드 클릭시 영화 추천
 const [related, setRelated] = useState<MovieItem[]>([]);
 const [relatedLoading, setRelatedLoading] = useState(false);
 const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">("none");
 const [bannerLabel, setBannerLabel] = useState<string>("");
 
 
+// 파생 상태/플래그 한 번만 선언
+  const hasQuery = query.trim() !== "";
+  const isUsingRelated = bannerMode !== "none";
+  const gridItems = isUsingRelated ? related : movies;
+  const isLoading = isUsingRelated ? relatedLoading : loading;
+  const noResult =
+    hasQuery &&
+    bannerMode === "none" &&
+    !loading &&
+    !error &&
+    movies.length === 0;
+
+    
   return (
     <S.Page>
       {/* 헤더 */}
@@ -340,7 +359,7 @@ const [bannerLabel, setBannerLabel] = useState<string>("");
 {/* 메인 */}
 <S.main>
   {/* 추천검색어 */}
-  {query.trim() !== "" && (
+  {hasQuery && !noResult && (
 <S.RecommendBox>
   <S.RecommendTitle>
     더 다양한 검색어가 필요하시다면!:
@@ -358,11 +377,11 @@ const [bannerLabel, setBannerLabel] = useState<string>("");
 
 {/* 추천영화 */}
 <S.ReMovie>
-  {query.trim() !== "" && loading && (
+  {hasQuery && isLoading && (
     <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
   )}
 
-  {query.trim() !== "" && bannerMode !== "none" && (
+  {hasQuery && !noResult && bannerMode !== "none" && (
   <S.ReOther>
     {bannerMode === "title"
         ? `“${bannerLabel}” 작품은 없습니다. 대신 이런 작품들은 어떠세요?`
@@ -370,13 +389,13 @@ const [bannerLabel, setBannerLabel] = useState<string>("");
   </S.ReOther>
   )}
   
-  {query.trim() !== "" && error && (
+  {hasQuery && error && (
     <div style={{ margin: "0 60px", color: "tomato" }}>오류: {error}</div>
   )}
 
-  {query.trim() !== "" && !loading && !error && movies.length > 0 && (
+  {hasQuery && !loading && !error && movies.length > 0 && (
   <S.MovieGrid>
-    {movies.map((m) => {
+    {gridItems.map((m) => {
             const title = m.title || m.name || "제목 없음";
             const img =
               (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
@@ -394,11 +413,11 @@ const [bannerLabel, setBannerLabel] = useState<string>("");
   )}
 
      {/* 결과 없음 */}
-      {query.trim() !== "" && !loading && !error && movies.length === 0 && (
+      {noResult && (
         <S.text>
 <S.NoSearch>
   <S.NoSearchTitle>
-    입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다. 
+    입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다.
   </S.NoSearchTitle>
   <S.ReSearch>
 추천 검색어:
