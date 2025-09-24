@@ -8,7 +8,7 @@ export default function Welcome(): React.JSX.Element {
     <S.MainContainer>
       <S.HeaderContainer>
         <S.WelcomeHeader>
-          <S.Logo />
+          <S.Logo onClick={() => navigate("/")} />
           <S.Console>
             <S.LangSelect>
               <S.LangOption>한국어</S.LangOption>
