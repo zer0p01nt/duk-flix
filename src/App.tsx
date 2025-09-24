@@ -10,7 +10,8 @@ import Welcome from "./pages/Welcome/Welcome";
 import Login from "./pages/Login/Login";
 import Search from "./pages/Search/Search";
 import Home from "./pages/main/Mainpage";
-import SignUp from "./pages/SignUp/Signup";
+import SignUp from "./pages/SignUp/SignUp";
+import PasswordReset from "./pages/PasswordReset/PasswordReset";
 
 const qc = new QueryClient();
 
@@ -25,6 +26,7 @@ function App(): React.JSX.Element {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/search' element={<Search />} />
           <Route path='/home' element={<Home />} />
+          <Route path='/password-reset' element={<PasswordReset />} />
         </Routes>
       </ThemeProvider>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
