@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 import * as S from "./WelcomeStyle";
 
 export default function Welcome(): React.JSX.Element {
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
   return (
     <S.MainContainer>
       <S.HeaderContainer>
         <S.WelcomeHeader>
-          <S.Logo />
+          <S.Logo onClick={() => navigate("/")} />
           <S.Console>
             <S.LangSelect>
               <S.LangOption>한국어</S.LangOption>

@@ -17,7 +17,7 @@ export const HeaderContainer = styled.div`
   height: 664px;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 5rem;
+  padding: 0 1rem;
   min-height: 31rem;
   display: flex;
   align-items: center;
@@ -34,7 +34,7 @@ export const Overlay = styled.div`
   height: 100%;
   background-color: ${theme.color.black};
   /* mix-blend-mode: color-burn; */
-  opacity: 0.7;
+  opacity: 0.6;
   z-index: 1;
 `;
 
@@ -47,7 +47,7 @@ export const WelcomeHeader = styled.header`
   z-index: 10;
 `;
 
-export const Logo = styled.div`
+export const Logo = styled.button`
   width: 200px;
   height: 80px;
   display: flex;
@@ -56,6 +56,9 @@ export const Logo = styled.div`
   background-image: url(${logo});
   background-size: cover;
   background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 `;
 
 export const Console = styled.div`

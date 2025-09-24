@@ -25,6 +25,9 @@ export const theme = {
     primaryHover: "#C11119",
     black: "#141414",
     white: "#FFFFFF",
+    gray: "#767676",
+    red: "#eb3942",
+    darkgray: "#333",
   },
   // breakpoints는 media 객체에서 import해서 쓰므로, 직접 쓰지는 않습니다
   breakpoints: size,
