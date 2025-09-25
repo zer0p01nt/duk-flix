@@ -3,27 +3,54 @@ import * as S from "./searchStyle";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect } from "react";
 
-export default function Search(): React.JSX.Element {
+// 컴포넌트
+export default function Search({
+  apiKey,
+  logoSrc,
+}: { apiKey?: string; logoSrc?: string } = {}): React.JSX.Element {
+
+// const [query, setQuery] = useState("");
+const [query, setQuery] = useState("");
+
+  // Api가져오기
+const TMDB_KEY = (apiKey || import.meta.env.VITE_TMDB_API_KEY) as string;
+const TMDB_BASE = "https://api.themoviedb.org/3";
+const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
+
+  const [movies, setMovies] = useState<MovieItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+// const handleClearSearch = () => {
   const navigate = useNavigate();
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
-  
 
-// 검색 취소시 메인 이동
-const [query, setQuery] = useState("");
-const handleClearSearch = () => {
+  const handleClearSearch = () => {
   setQuery("");
   setShowSearch(false);
   navigate("/"); // 메인으로
 };
 
-  // Api가져오기
-const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY as string;
-const TMDB_BASE = "https://api.themoviedb.org/3";
-const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
+  const [suggests, setSuggests] = useState<Suggestion[]>([]);
+const [sugLoading, setSugLoading] = useState(false);
+const [related, setRelated] = useState<MovieItem[]>([]);
+const [relatedLoading, setRelatedLoading] = useState(false);
+const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">("none");
+const [bannerLabel, setBannerLabel] = useState<string>("");
+
+  const hasQuery = query.trim() !== "";
+  const isUsingRelated = bannerMode !== "none";
+  const gridItems = isUsingRelated ? related : movies;
+  const isLoading = isUsingRelated ? relatedLoading : loading;
+  const noResult =
+    hasQuery &&
+    bannerMode === "none" &&
+    !loading &&
+    !error &&
+    movies.length === 0;
 
 type MovieItem = {
   id: number;
@@ -49,12 +76,14 @@ type KeywordItem = {
   name: string;
 };
 
-const [movies, setMovies] = useState<MovieItem[]>([]);
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState<string | null>(null);
 
 useEffect(() => {
   const q = query.trim();
+  if (!TMDB_KEY) {
+    setError("TMDB API 키가 없습니다. apiKey props 또는 VITE_TMDB_API_KEY를 설정하세요.");
+    setMovies([]);
+    return;
+  }
 
   setBannerMode("none"); 
   setRelated([]);            
@@ -218,36 +247,13 @@ useEffect(() => {
   }, [open]);
   
 
-// 추천 키워드
-const [suggests, setSuggests] = useState<Suggestion[]>([]);
-const [sugLoading, setSugLoading] = useState(false);
-
-// 추천키워드 클릭시 영화 추천
-const [related, setRelated] = useState<MovieItem[]>([]);
-const [relatedLoading, setRelatedLoading] = useState(false);
-const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">("none");
-const [bannerLabel, setBannerLabel] = useState<string>("");
-
-
-// 파생 상태/플래그 한 번만 선언
-  const hasQuery = query.trim() !== "";
-  const isUsingRelated = bannerMode !== "none";
-  const gridItems = isUsingRelated ? related : movies;
-  const isLoading = isUsingRelated ? relatedLoading : loading;
-  const noResult =
-    hasQuery &&
-    bannerMode === "none" &&
-    !loading &&
-    !error &&
-    movies.length === 0;
-
-
   return (
     <S.Page>
       {/* 헤더 */}
       <S.HeaderBar>
         <S.Logo>
-          <S.LogoImg src={logo} alt="Netflix" />
+          {/* <S.LogoImg src={logo} alt="Netflix" /> */}
+          <S.LogoImg src={logoSrc || logo} alt="Netflix" />
         </S.Logo>
 
         {/* 메뉴 */}
