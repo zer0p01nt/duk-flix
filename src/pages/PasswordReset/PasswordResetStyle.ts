@@ -23,7 +23,7 @@ export const ResetContainer = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgb(242, 242, 242);
-  margin: 2.5rem 2rem 3rem;
+  margin: 5rem 2rem;
   padding: 2.5rem;
   gap: 1rem;
 `;
