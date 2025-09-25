@@ -17,7 +17,7 @@ export const HeaderContainer = styled.div`
   height: 664px;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 1rem;
+  padding: 0 2rem;
   min-height: 31rem;
   display: flex;
   align-items: center;

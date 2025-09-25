@@ -10,14 +10,15 @@ export const MainContainer = styled.div`
   background-color: ${theme.color.white};
 `;
 
-export const Header = styled.div`
+export const Header = styled.div<{ $isSignUp: boolean }>`
   height: 100px;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 2rem;
   align-items: center;
-  border-bottom: 1px solid rgb(230, 230, 230);
+  border-bottom: ${({ $isSignUp }) =>
+    $isSignUp ? "1px solid rgb(230, 230, 230)" : "1px solid #1A1A1A"};
 `;
 
 export const ToLogin = styled.a`
@@ -77,4 +78,9 @@ export const Btn = styled.button`
   border: none;
   font-size: 1.5rem;
   font-weight: 500;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.68, 0.06);
+
+  &:hover {
+    background-color: ${theme.color.primaryHover};
+  }
 `;

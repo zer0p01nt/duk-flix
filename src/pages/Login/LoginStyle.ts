@@ -63,7 +63,7 @@ export const InputBox = styled.div`
 
 export const Input = styled.input<{ $isBorderRed: boolean; $isLogin: boolean }>`
   width: 100%;
-  padding: 1rem 1rem;
+  padding: 1rem;
   background: none;
   caret-color: ${({ $isLogin }) => ($isLogin ? "#FFF" : "#000")};
   line-height: 1.5;
@@ -73,9 +73,9 @@ export const Input = styled.input<{ $isBorderRed: boolean; $isLogin: boolean }>`
   border: ${({ $isBorderRed, $isLogin }) =>
     $isBorderRed
       ? $isLogin
-        ? "1px solid #eb3942"
-        : "1px solid #C11119"
-      : "1px solid #767676"};
+        ? `1px solid ${theme.color.red}`
+        : `1px solid ${theme.color.primaryHover}`
+      : `1px solid ${theme.color.gray}`};
   outline-offset: 3px;
 
   &::placeholder {
@@ -89,7 +89,8 @@ export const ErrorMsg = styled.div<{ $isLogin: boolean }>`
   align-items: center;
   gap: 3px;
   align-self: flex-start;
-  color: ${({ $isLogin }) => ($isLogin ? "#eb3942" : "#C11119")};
+  color: ${({ $isLogin }) =>
+    $isLogin ? `${theme.color.red}` : `${theme.color.primaryHover}`};
   font-size: 0.8125rem;
 `;
 
@@ -105,6 +106,11 @@ export const Btn = styled.button`
   border: none;
   font-size: 1rem;
   font-weight: 500;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.68, 0.06);
+
+  &:hover {
+    background-color: ${theme.color.primaryHover};
+  }
 `;
 
 export const ToReset = styled.a`
