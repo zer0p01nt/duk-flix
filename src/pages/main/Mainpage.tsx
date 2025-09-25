@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
-import logo from "@/assets/Netflix_Logo_RGB.png";
+// import logo from "@/assets/Netflix_Logo_RGB.png";
+import Search from "../Search/Search";
 
 type Row = {
   id: string;
@@ -41,7 +42,8 @@ export default function Home(): React.JSX.Element {
 
   return (
     <S.Page>
-      {/* 헤더 */}
+      {/* 주석부분 사용 안 한다면 삭제해주세욤 */}
+      {/* 헤더
       <S.HeaderBar>
         <S.Logo>
           <S.LogoImg src={logo} alt="Netflix" />
@@ -88,7 +90,8 @@ export default function Home(): React.JSX.Element {
           </S.IconBox>
           <S.Avatar />
         </S.HeaderActions>
-      </S.HeaderBar>
+      </S.HeaderBar> */}
+      <Search/>
 
       {/* 히어로(상단 큰 배너) */}
       <S.Hero>
