@@ -1,7 +1,6 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom"; //navigate() 사용할 때 주석 풀면 됑
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
-// import logo from "@/assets/Netflix_Logo_RGB.png";
 import Search from "../Search/Search";
 
 type Row = {
@@ -38,7 +37,7 @@ const rows: Row[] = [
 ];
 
 export default function Home(): React.JSX.Element {
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); //이것듀
 
   return (
     <S.Page>

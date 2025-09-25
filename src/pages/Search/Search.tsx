@@ -9,7 +9,6 @@ export default function Search({
   logoSrc,
 }: { apiKey?: string; logoSrc?: string } = {}): React.JSX.Element {
 
-// const [query, setQuery] = useState("");
 const [query, setQuery] = useState("");
 
   // Api가져오기
@@ -50,7 +49,7 @@ useEffect(() => {
 
   const handleClearSearch = () => {
   setQuery("");
-  setShowSearch(false);
+  setShowSearch(true);
   navigate("/home"); // 메인으로
 };
 
@@ -142,6 +141,32 @@ useEffect(() => {
 
   return () => { clearTimeout(timer); ctrl.abort(); };
 }, [query, TMDB_KEY]);
+
+
+// 이동
+// const { pathname, search } = useLocation();
+
+useEffect(() => {
+  const q = query.trim();
+
+  const timer = setTimeout(() => {
+    if (q) {
+      const next = `/search?query=${encodeURIComponent(q)}`;
+      const current = `${pathname}${search}`;
+      if (current !== next) {
+        navigate(next, { replace: true });
+      }
+    } else {
+      if (pathname !== "/home") navigate("/home", { replace: true });
+      setBannerMode("none");
+      setRelated([]);
+      setMovies([]);
+    }
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [query, pathname, search, navigate]);
+
 
 // 추천어 생성
 useEffect(() => {
@@ -268,22 +293,13 @@ useEffect(() => {
   
 
   return (
-  //   <S.SearchPage style={{
-  //   minHeight: query.trim() ? "100dvh" : "auto",
-  //   background: query.trim() ? "#000" : "transparent",
-  // }} >
   <S.SearchPage style={{
    minHeight: isSearchRoute ? "100dvh" : "auto",
    background: isSearchRoute ? "#141414" : "transparent",
  }}>
-      {/* style={{
-    minHeight: query.trim() ? "100dvh" : "auto",
-    background: query.trim() ? "#000" : "transparent",
-  }} */}
       {/* 헤더 */}
       <S.HeaderBar >
         <S.Logo>
-          {/* <S.LogoImg src={logo} alt="Netflix" /> */}
           <S.LogoImg src={logoSrc || logo} alt="Netflix" />
         </S.Logo>
 
@@ -349,7 +365,7 @@ useEffect(() => {
                 />
               </S.Svg>
             </S.Searchimg>
-<S.SearchBox
+{/* <S.SearchBox
   placeholder="제목, 사람, 장르"
   value={query}
   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -365,7 +381,16 @@ useEffect(() => {
      setMovies([]);
    }
   }}
+/> */}
+<S.SearchBox
+  placeholder="제목, 사람, 장르"
+  value={query}
+  onChange={(e) => {
+    setQuery(e.target.value);
+    setShowSearch(true); // 입력 중엔 검색창 유지
+  }}
 />
+
 {/* <S.SearchBox placeholder="제목, 사람, 장르" value={query} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)} /> */}
 
 
