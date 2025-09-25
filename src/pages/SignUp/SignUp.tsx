@@ -7,9 +7,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EmailInput from "../Login/EmailInput";
 import PasswordInput from "../Login/PasswordInput";
-import * as W from "@/pages/Welcome/WelcomeStyle";
 import * as L from "@/pages/Login/LoginStyle";
 import * as S from "./SignUpStyle";
+import SignUpHeader from "./SignUpHeader";
 
 // firebase 회원가입 함수
 const signUpWithEmail = async (account: {
@@ -70,10 +70,7 @@ export default function SignUp(): React.JSX.Element {
 
   return (
     <S.MainContainer>
-      <S.Header>
-        <W.Logo onClick={() => navigate("/")} />
-        <S.ToLogin href='/login'>로그인</S.ToLogin>
-      </S.Header>
+      <SignUpHeader $isSignUp={true} />
       <S.SignUpContainer>
         <S.Title>비밀번호를 설정해 멤버십을 시작하세요</S.Title>
         <S.TextBox>
