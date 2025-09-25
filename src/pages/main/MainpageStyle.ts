@@ -2,83 +2,84 @@ import styled from "styled-components";
 
 /* 페이지 & 공통 */
 export const Page = styled.div`
-  background: #000;
+  background:#141414;
+  /*
   color: #fff;
   min-height: 100dvh;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden; */
 `;
 
-/* 헤더 */
-export const HeaderBar = styled.header`
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 32px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-`;
+// /* 헤더 */
+// export const HeaderBar = styled.header`
+//   position: sticky;
+//   top: 0;
+//   z-index: 50;
+//   display: grid;
+//   grid-template-columns: auto 1fr auto;
+//   align-items: center;
+//   gap: 16px;
+//   padding: 16px 32px;
+//   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+// `;
 
-export const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
+// export const Logo = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+// `;
 
-export const LogoImg = styled.img`
-  height: 26px;
-  width: auto;
-`;
+// export const LogoImg = styled.img`
+//   height: 26px;
+//   width: auto;
+// `;
 
-export const Nav = styled.nav`
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  font-size: 14px;
-  opacity: 0.95;
-`;
+// export const Nav = styled.nav`
+//   display: flex;
+//   gap: 18px;
+//   align-items: center;
+//   font-size: 14px;
+//   opacity: 0.95;
+// `;
 
-export const NavItem = styled.button`
-  background: none;
-  border: 0;
-  color: #fff;
-  cursor: pointer;
-  padding: 6px 0;
-  &:hover {
-    opacity: 0.7;
-  }
-`;
+// export const NavItem = styled.button`
+//   background: none;
+//   border: 0;
+//   color: #fff;
+//   cursor: pointer;
+//   padding: 6px 0;
+//   &:hover {
+//     opacity: 0.7;
+//   }
+// `;
 
-export const HeaderActions = styled.div`
-  display: flex;
-  gap: 14px;
-  align-items: center;
-`;
+// export const HeaderActions = styled.div`
+//   display: flex;
+//   gap: 14px;
+//   align-items: center;
+// `;
 
-export const Svg = styled.svg`
-  width: 20px;
-  height: 20px;
-  color: #fff; /* path의 fill="currentColor"와 연결됨 */
-`;
+// export const Svg = styled.svg`
+//   width: 20px;
+//   height: 20px;
+//   color: #fff; /* path의 fill="currentColor"와 연결됨 */
+// `;
 
-export const IconBox = styled.div`
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-`;
+// export const IconBox = styled.div`
+//   width: 28px;
+//   height: 28px;
+//   display: grid;
+//   place-items: center;
+//   background: rgba(255, 255, 255, 0.08);
+//   border-radius: 999px;
+// `;
 
-export const Avatar = styled.div`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #9c88ff;
-`;
+// export const Avatar = styled.div`
+//   width: 28px;
+//   height: 28px;
+//   border-radius: 50%;
+//   background: #9c88ff;
+// `;
 
 /* 히어로 */
 export const Hero = styled.section`
