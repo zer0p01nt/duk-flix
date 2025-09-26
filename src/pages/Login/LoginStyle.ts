@@ -124,7 +124,7 @@ export const ToSignUpBox = styled.div`
 `;
 
 export const ToSignUpText = styled.div`
-  color: ${theme.color.gray};
+  color: ${theme.color.lightgray};
 `;
 
 export const ToSignUp = styled.a`
