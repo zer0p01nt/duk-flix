@@ -3,7 +3,6 @@ import { theme } from "@/styles/theme";
 
 export const MainContainer = styled.div`
   width: 100%;
-  height: 1000px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -18,7 +17,7 @@ export const Header = styled.div<{ $isSignUp: boolean }>`
   padding: 0 2rem;
   align-items: center;
   border-bottom: ${({ $isSignUp }) =>
-    $isSignUp ? "1px solid rgb(230, 230, 230)" : "1px solid #1A1A1A"};
+    $isSignUp ? `1px solid ${theme.color.signUpGray} ` : "1px solid #1A1A1A"};
 `;
 
 export const ToLogin = styled.a`
@@ -31,7 +30,6 @@ export const ToLogin = styled.a`
 export const SignUpContainer = styled.div`
   width: 100%;
   max-width: 440px;
-  height: 90vh;
   display: flex;
   align-items: center;
   flex-direction: column;

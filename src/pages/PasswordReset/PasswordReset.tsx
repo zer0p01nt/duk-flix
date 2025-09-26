@@ -11,6 +11,7 @@ import * as W from "@/pages/Welcome/WelcomeStyle";
 import * as S from "./PasswordResetStyle";
 import * as L from "@/pages/Login/LoginStyle";
 import SignUpHeader from "../SignUp/SignUpHeader";
+import Footer from "@/components/Footer/Footer";
 
 export default function PasswordReset(): React.JSX.Element {
   const [email, setEmail] = useState("");
@@ -56,34 +57,37 @@ export default function PasswordReset(): React.JSX.Element {
   };
 
   return (
-    <W.MainContainer>
-      <S.Background>
-        <SignUpHeader $isSignUp={false} />
-        <S.ResetContainer>
-          <S.Title>
-            <div>비밀번호, 이메일 주소를</div>
-            <div>업데이트하세요</div>
-          </S.Title>
-          {errorMsg && <S.ErrorBox>{errorMsg}</S.ErrorBox>}
-          <S.Text>비밀번호 재설정 안내 이메일을 보내드리겠습니다.</S.Text>
-          <S.Form onSubmit={handlePasswordReset}>
-            <S.InputBox>
-              <L.Input
-                type='email'
-                placeholder='이메일 주소'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                $isBorderRed={!!errorMsg}
-                $isLogin={false}
-              />
-            </S.InputBox>
-            <S.Btn type='submit' disabled={loading}>
-              이메일로 받기
-            </S.Btn>
-          </S.Form>
-        </S.ResetContainer>
-      </S.Background>
-    </W.MainContainer>
+    <>
+      <W.MainContainer>
+        <S.Background>
+          <SignUpHeader $isSignUp={false} />
+          <S.ResetContainer>
+            <S.Title>
+              <div>비밀번호, 이메일 주소를</div>
+              <div>업데이트하세요</div>
+            </S.Title>
+            {errorMsg && <S.ErrorBox>{errorMsg}</S.ErrorBox>}
+            <S.Text>비밀번호 재설정 안내 이메일을 보내드리겠습니다.</S.Text>
+            <S.Form onSubmit={handlePasswordReset}>
+              <S.InputBox>
+                <L.Input
+                  type='email'
+                  placeholder='이메일 주소'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  $isBorderRed={!!errorMsg}
+                  $isLogin={false}
+                />
+              </S.InputBox>
+              <S.Btn type='submit' disabled={loading}>
+                이메일로 받기
+              </S.Btn>
+            </S.Form>
+          </S.ResetContainer>
+        </S.Background>
+      </W.MainContainer>
+      <Footer $isSignUp={false} $isWelcome={false} />
+    </>
   );
 }
