@@ -11,11 +11,11 @@ export default function Footer({
   $isSignUp,
 }: FooterProps): React.JSX.Element {
   return (
-    <S.MainContainer $isSignUp={$isSignUp}>
+    <S.MainContainer $isSignUp={$isSignUp} $isWelcome={$isWelcome}>
       <div>
         질문이 있으신가요? 문의 전화: 00-308-321-0161 (수신자 부담)(무료 전화)
       </div>
-      <S.LinkBox $isWelcome={$isWelcome} $isSignUp={$isSignUp}>
+      <S.LinkBox $isWelcome={$isWelcome}>
         <li>
           <S.Link href='https://help.netflix.com/support/412'>
             자주 묻는 질문
