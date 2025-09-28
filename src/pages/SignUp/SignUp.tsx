@@ -4,7 +4,11 @@ import { useMutation } from "@tanstack/react-query";
 import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  type NavigateFunction,
+} from "react-router-dom";
 import EmailInput from "../Login/EmailInput";
 import PasswordInput from "../Login/PasswordInput";
 import * as L from "@/pages/Login/LoginStyle";
@@ -53,8 +57,13 @@ const useSignUp = (
 };
 
 export default function SignUp(): React.JSX.Element {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+
+  // 첫 화면을 통해서 온 경우에만 initialEmail 존재
+  const initialEmail = location.state?.initialEmail || "";
+
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
