@@ -5,16 +5,8 @@ import type { FooterProps } from "./Footer";
 import { LangSelect } from "@/pages/Welcome/WelcomeStyle";
 
 export const MainContainer = styled.footer<FooterProps>`
-  border-top: ${({ $isSignUp }) =>
-    $isSignUp
-      ? `1px solid ${theme.color.signUpGray}`
-      : "1px solid rgb(35, 35, 35)"};
   width: 100%;
-  background-color: ${({ $isSignUp }) =>
-    $isSignUp ? "rgb(243, 243, 243)" : "rgb(22, 22, 22)"};
   padding: 2rem 9rem;
-  color: ${({ $isSignUp }) =>
-    $isSignUp ? "rgb(115, 115, 115)" : `${theme.color.lightgray}`};
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -24,9 +16,13 @@ export const MainContainer = styled.footer<FooterProps>`
       padding: 2rem 1.5rem;
   `}
 
-  ${({ $isSignUp }) =>
+  ${({ $isSignUp, $isWelcome }) =>
     $isSignUp
       ? css`
+          border-top: 1px solid ${theme.color.signUpGray};
+          background-color: rgb(243, 243, 243);
+          color: rgb(115, 115, 115);
+
           ${Link}, ${TextBtn}, ${LangSelect} {
             color: rgb(115, 115, 115);
           }
@@ -38,7 +34,21 @@ export const MainContainer = styled.footer<FooterProps>`
             background-color: ${theme.color.white};
           }
         `
+      : $isWelcome
+      ? css`
+          border-top: none;
+          background-color: #000;
+          color: ${theme.color.lightgray};
+
+          ${Link}, ${TextBtn}, ${LangSelect} {
+            color: ${theme.color.lightgray};
+          }
+        `
       : css`
+          border-top: 1px solid rgb(35, 35, 35);
+          background-color: rgb(22, 22, 22);
+          color: ${theme.color.lightgray};
+
           ${Link}, ${TextBtn}, ${LangSelect} {
             color: ${theme.color.lightgray};
           }
