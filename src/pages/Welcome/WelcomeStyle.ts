@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import background from "@/assets/welcome-background.jpg";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { theme } from "@/styles/theme";
@@ -249,7 +249,7 @@ export const Main = styled.div`
   align-items: center;
   gap: 4rem;
   color: ${theme.color.white};
-  padding-bottom: 2rem;
+  padding-bottom: 4rem;
   width: 100%;
 `;
 
@@ -313,11 +313,141 @@ export const ContentWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 70vw;
-  gap: 0.5rem;
+  gap: 1rem;
 `;
 
 export const ContentTitle = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
+  align-self: flex-start;
+  ${media.laptop`
+      font-size: 1.5rem;
+      font-weight: 500;
+  `}
+`;
+
+export const ReasonContainer = styled.div`
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+
+  ${media.laptop`
+    grid-template-columns: repeat(2, 1fr);
+  `}
+  ${media.tablet`
+    grid-template-columns: none;
+    grid-template-rows: repeat(4, 1fr);
+  `}
+`;
+
+export const ReasonBox = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(149deg, #192247 0%, #210e17 99.08%);
+
+  & > svg {
+    align-self: flex-end;
+  }
+`;
+
+export const ReasonTitle = styled.div`
   font-size: 1.5rem;
   font-weight: 500;
-  align-self: flex-start;
+  ${media.laptop`
+    font-size: 1.25rem;
+  `}
+`;
+
+export const ReasonText = styled.div`
+  color: ${theme.color.lightgray};
+  font-size: 1rem;
+  font-weight: 400;
+`;
+
+export const FAQContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+`;
+
+export const FAQWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  width: 100%;
+`;
+
+export const FAQBox = styled.button<{ $isOpen: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: rgb(45, 45, 45);
+  color: ${theme.color.white};
+  transition: background-color 250ms cubic-bezier(0.32, 0.94, 0.6, 0.1);
+  cursor: pointer;
+  font-size: 1.5rem;
+  border: none;
+  padding: 1.5rem;
+  gap: 1rem;
+
+  &:hover {
+    background-color: rgb(65, 65, 65);
+  }
+  ${media.laptop`
+    font-size: 1.125rem;
+  `}
+
+  ${({ $isOpen }) =>
+    $isOpen &&
+    css`
+      svg {
+        transform: rotate(-45deg);
+      }
+    `}
+`;
+
+export const FAQContent = styled.div<{ $isOpen: boolean }>`
+  width: 100%;
+  background-color: rgb(45, 45, 45);
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 1.125rem;
+
+  transition: all 200ms cubic-bezier(0.32, 0.94, 0.6, 0.1);
+  overflow: hidden;
+
+  ${({ $isOpen }) =>
+    $isOpen
+      ? css`
+          max-height: 500px;
+          padding: 1.5rem;
+          opacity: 1;
+        `
+      : css`
+          max-height: 0;
+          padding: 0 1.5rem;
+          opacity: 0;
+        `}
+
+  ${media.laptop`
+    font-size: 1rem;
+  `}
+
+  & > a {
+    color: ${theme.color.white};
+    font-size: 1.125rem;
+    ${media.laptop`
+      font-size: 1rem;
+    `}
+  }
 `;
