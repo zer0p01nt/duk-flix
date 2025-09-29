@@ -1,3 +1,4 @@
+// src/pages/MainpageStyle.ts
 import styled from "styled-components";
 
 /* 페이지 & 공통 */
@@ -61,7 +62,7 @@ export const HeaderActions = styled.div`
 export const Svg = styled.svg`
   width: 20px;
   height: 20px;
-  color: #fff; /* path의 fill="currentColor"와 연결됨 */
+  color: #fff;
 `;
 
 export const IconBox = styled.div`
@@ -117,6 +118,7 @@ export const HeroContent = styled.div`
 export const HeroTitle = styled.h1`
   margin: 0;
 `;
+
 export const TitleLogo = styled.img`
   width: clamp(220px, 34vw, 520px);
   height: auto;
@@ -147,12 +149,13 @@ export const PlayBtn = styled.button`
   font-weight: 700;
   cursor: pointer;
 `;
+
 export const InfoBtn = styled(PlayBtn)`
   background: rgba(109, 109, 110, 0.7);
   color: #fff;
 `;
 
-/* 가로 슬라이더 */
+/* ─────────────── 가로 슬라이더 ─────────────── */
 export const RowSection = styled.section`
   display: grid;
   gap: 26px;
@@ -171,56 +174,85 @@ export const RowTitle = styled.h2`
 
 export const SliderWrapper = styled.div`
   position: relative;
+  overflow: hidden;
+  padding: 0 6px;
 `;
 
 export const Slider = styled.div`
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: clamp(140px, 18vw, 260px);
   gap: 8px;
   overflow-x: auto;
+  scroll-behavior: smooth;
   padding-bottom: 6px;
 
   &::-webkit-scrollbar {
-    height: 6px;
+    height: 0;
   }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 999px;
-  }
+  scrollbar-width: none;
+`;
+
+/* 화살표 버튼 (hover 시 나타나도록) */
+const hoverSelector = `
+  ${SliderWrapper}:hover & { opacity: 1; }
 `;
 
 export const ArrowLeft = styled.button`
   position: absolute;
-  top: 40%;
-  left: 0;
+  top: 50%;
+  left: 8px;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  width: 44px;
+  height: 115px;
   border: none;
-  color: white;
-  font-size: 24px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
   cursor: pointer;
   z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  ${hoverSelector}
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+    opacity: 1;
+  }
 `;
 
 export const ArrowRight = styled(ArrowLeft)`
   left: auto;
-  right: 0;
+  right: 8px;
 `;
 
-export const Thumb = styled.div`
+/* 썸네일: 배경 이미지를 바로 씌우는 버튼 형태 */
+export const Thumb = styled.button<{ $bg: string }>`
   position: relative;
-  aspect-ratio: 16/9;
-  background: #222;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: 0;
   border-radius: 6px;
   overflow: hidden;
   cursor: pointer;
+  background: ${({ $bg }) =>
+    $bg ? `url(${$bg}) center / cover no-repeat` : "#222"};
 
   &:hover::after {
     content: "";
     position: absolute;
     inset: 0;
     box-shadow: inset 0 0 0 2px #fff3;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
   }
 `;
 
