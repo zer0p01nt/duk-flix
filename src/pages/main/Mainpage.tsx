@@ -143,7 +143,7 @@ export default function Home(): React.JSX.Element {
         }
         const topKRList = takeDistinct(mixedKR, 10, banned);
 
-        const watchingList = takeDistinct(nowPlaying, 8, banned); // 시청 중(임시)
+        const watchingList = takeDistinct(nowPlaying, 8, banned);
         const popularMovieList = takeDistinct(movies, 18, banned);
         const popularTVList = takeDistinct(tvs, 18, banned);
 
