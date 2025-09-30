@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as S from "./searchStyle";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect } from "react";
@@ -9,7 +9,6 @@ export default function Search({
   logoSrc,
 }: { apiKey?: string; logoSrc?: string } = {}): React.JSX.Element {
 
-// const [query, setQuery] = useState("");
 const [query, setQuery] = useState("");
 
   // Api가져오기
@@ -17,9 +16,29 @@ const TMDB_KEY = (apiKey || import.meta.env.VITE_TMDB_API_KEY) as string;
 const TMDB_BASE = "https://api.themoviedb.org/3";
 const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 
+// 로딩
+const { pathname, search } = useLocation();
+const isSearchRoute = pathname.startsWith("/search");
+
+useEffect(() => {
+  if (!isSearchRoute) return;
+  const params = new URLSearchParams(search);
+  const q = params.get("query") ?? "";
+  if (q !== query) setQuery(q);   // 첫 글자부터 바로 fetch 돌게 함
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isSearchRoute, search]);
+
+useEffect(() => {
+  if (isSearchRoute) setShowSearch(true);
+}, [isSearchRoute]);
+
+
   const [movies, setMovies] = useState<MovieItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+// const { pathname } = useLocation();
+// const isSearchRoute = pathname.startsWith("/search");
 
 // const handleClearSearch = () => {
   const navigate = useNavigate();
@@ -30,8 +49,8 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 
   const handleClearSearch = () => {
   setQuery("");
-  setShowSearch(false);
-  navigate("/"); // 메인으로
+  setShowSearch(true);
+  navigate("/home"); // 메인으로
 };
 
   const [suggests, setSuggests] = useState<Suggestion[]>([]);
@@ -122,6 +141,32 @@ useEffect(() => {
 
   return () => { clearTimeout(timer); ctrl.abort(); };
 }, [query, TMDB_KEY]);
+
+
+// 이동
+// const { pathname, search } = useLocation();
+
+useEffect(() => {
+  const q = query.trim();
+
+  const timer = setTimeout(() => {
+    if (q) {
+      const next = `/search?query=${encodeURIComponent(q)}`;
+      const current = `${pathname}${search}`;
+      if (current !== next) {
+        navigate(next, { replace: true });
+      }
+    } else {
+      if (pathname !== "/home") navigate("/home", { replace: true });
+      setBannerMode("none");
+      setRelated([]);
+      setMovies([]);
+    }
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [query, pathname, search, navigate]);
+
 
 // 추천어 생성
 useEffect(() => {
@@ -248,11 +293,13 @@ useEffect(() => {
   
 
   return (
-    <S.Page>
+  <S.SearchPage style={{
+   minHeight: isSearchRoute ? "100dvh" : "auto",
+   background: isSearchRoute ? "#141414" : "transparent",
+ }}>
       {/* 헤더 */}
-      <S.HeaderBar>
+      <S.HeaderBar >
         <S.Logo>
-          {/* <S.LogoImg src={logo} alt="Netflix" /> */}
           <S.LogoImg src={logoSrc || logo} alt="Netflix" />
         </S.Logo>
 
@@ -291,7 +338,7 @@ useEffect(() => {
 
       {/* 네브바 */}
         <S.Nav>
-          <S.NavItem onClick={() => navigate("/")}>홈</S.NavItem>
+          <S.NavItem onClick={() => navigate("/home")}>홈</S.NavItem>
           <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
           <S.NavItem onClick={() => navigate("/movies")}>영화</S.NavItem>
           <S.NavItem onClick={() => navigate("/new")}>NEW & 인기</S.NavItem>
@@ -318,11 +365,35 @@ useEffect(() => {
                 />
               </S.Svg>
             </S.Searchimg>
-              <S.SearchBox
-                placeholder="제목, 사람, 장르"
-                value={query}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-              />
+{/* <S.SearchBox
+  placeholder="제목, 사람, 장르"
+  value={query}
+  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+    const q = e.target.value;
+    setQuery(q);
+  if (q.trim()) {
+    navigate(`/search?query=${encodeURIComponent(q)}`, { replace: true });
+   } else {
+
+     navigate("/home", { replace: true });
+     setBannerMode("none");
+     setRelated([]);
+     setMovies([]);
+   }
+  }}
+/> */}
+<S.SearchBox
+  placeholder="제목, 사람, 장르"
+  value={query}
+  onChange={(e) => {
+    setQuery(e.target.value);
+    setShowSearch(true); // 입력 중엔 검색창 유지
+  }}
+/>
+
+{/* <S.SearchBox placeholder="제목, 사람, 장르" value={query} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)} /> */}
+
+
             {query && (
             <S.SearchDel onClick={handleClearSearch} role="button" aria-label="검색어 삭제">
               ⨯
@@ -366,6 +437,7 @@ useEffect(() => {
           <S.Avatar />
         </S.HeaderActions>
       </S.HeaderBar>
+      <S.HeaderSpacer /> 
 
 {/* 메인 */}
 <S.main>
@@ -452,6 +524,6 @@ useEffect(() => {
         )}
 </S.ReMovie>
 </S.main>
-    </S.Page>
+ </S.SearchPage>
   );
 }

@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 /* 페이지 & 공통 */
 export const Page = styled.div`
-  background: #000;
+  background:#141414;
+  /*
   color: #fff;
   min-height: 100dvh;
   width: 100%;
