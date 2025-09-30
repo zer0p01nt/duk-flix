@@ -1,21 +1,34 @@
 import styled from "styled-components";
 
 /* 페이지 & 공통 */
-export const Page = styled.div`
-  background: #141414;
+export const SearchPage = styled.div`
   color: #fff;
   min-height: 100dvh;
+  /* display: contents; */
+  background-color: #141414;
   width: 100%;
   overflow-x: hidden;
+  /* display: none; */
 `;
 
 /* 헤더 */
+export const HeaderSpacer = styled.div`
+  height: 50px; /* 50 + 16*2 */
+`;
+
 export const HeaderBar = styled.header`
-  position: sticky;
+  /* position: sticky;
   width: 100%;
-  height: 80px;
+  height: 50px;
   top: 0;
-  z-index: 50;
+  z-index: 50; */
+  /* position: fixed; */
+  position: fixed;        /* ✅ 항상 상단 고정 */
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 50px;           /* 실제 높이: 50 + padding(16*2) = 82px */
+  box-sizing: border-box; 
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -204,8 +217,7 @@ export const DropdownIcon = styled.div`
 
 // 메인 공통
 export const main = styled.div`
-/* display: none; */
-`;
+margin-top: 30px`;
 
 // 추천
 export const RecommendBox = styled.div`

@@ -28,8 +28,9 @@ function App(): React.JSX.Element {
           <Route path='/search' element={<Search />} />
           <Route path='/password-reset' element={<PasswordReset />} />
 
+          {/* tv 프로그램은 인식이 안돼서 수정 */}
           <Route path='/home' element={<Home />}>
-            <Route path='movie/:movieId' element={<DetailPage />} />
+            <Route path=':mediaType/:mediaId' element={<DetailPage />} />
           </Route>
           
         </Routes>

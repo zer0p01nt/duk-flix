@@ -69,7 +69,7 @@ export const BackdropGradient = styled.div`
 
 export const Title = styled.h1`
   position: absolute;
-  bottom: 100px;
+  bottom: 110px;
   left: 50px;
   font-size: 36px;
   color: white;
@@ -94,12 +94,12 @@ export const PlayButton = styled.button`
   border: none;
   background-color: white;
   color: black;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.8);
@@ -108,42 +108,109 @@ export const PlayButton = styled.button`
 
 export const ActionButton = styled.button`
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.7);
   background-color: rgba(42, 42, 42, 0.6);
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
   &:hover {
     border-color: white;
   }
+  
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+`;
 
-  /* 👇 content 부분을 attr(data-tooltip)으로 수정했습니다. */
+// 👇 이 부분의 padding과 border를 수정했습니다.
+export const RatingMenu = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  border-radius: 30px;
+  padding: 8px; /* 4px -> 8px 로 수정 */
+  gap: 4px;
+  /* border: 1px solid #4d4d4d; */ /* 테두리 제거 */
+  
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+`;
+
+export const RatingContainer = styled.div`
+  position: relative;
+  width: 44px;
+  height: 44px;
+
+  & > ${ActionButton} {
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    & > ${ActionButton} {
+      opacity: 0;
+      visibility: hidden;
+    }
+    & > ${RatingMenu} {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+`;
+
+export const RatingOption = styled(ActionButton)`
+  width: 42px;
+  height: 42px;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* 툴팁 텍스트 박스 */
   &::before {
-    content: attr(data-tooltip); /* 속성 값으로 툴팁 내용 가져오기 */
+    content: attr(data-tooltip);
     position: absolute;
-    bottom: calc(100% + 10px);
+    bottom: calc(100% + 10px); /* 꼬리가 들어갈 공간(5px)만큼 더 위로 */
     left: 50%;
     transform: translateX(-50%);
     background-color: #e6e6e6;
     color: #111;
     padding: 8px 12px;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 30;
+    /* z-index 제거 */
   }
-
+  
+  /* 툴팁 꼬리(말풍선 모양) */
   &::after {
     content: "";
     position: absolute;
-    bottom: calc(100% + 5px);
+    bottom: calc(100% + 5px); /* 텍스트 박스 바로 아래에 붙도록 위치 수정 */
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
     width: 10px;
@@ -152,9 +219,9 @@ export const ActionButton = styled.button`
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 29;
+    /* z-index 제거 */
   }
-
+  
   &:hover::before,
   &:hover::after {
     opacity: 1;

@@ -28,6 +28,8 @@ export const theme = {
     gray: "#767676",
     red: "#eb3942",
     darkgray: "#333",
+    lightgray: "rgba(255, 255, 255, 0.7)",
+    signUpGray: "rgb(230, 230, 230)",
   },
   // breakpoints는 media 객체에서 import해서 쓰므로, 직접 쓰지는 않습니다
   breakpoints: size,
