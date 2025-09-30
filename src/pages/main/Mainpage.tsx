@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, Link } from "react-router-dom";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import logo from "@/assets/Netflix_Logo_RGB.png";
+
 
 type Row = {
   id: string;
@@ -134,10 +135,12 @@ export default function Home(): React.JSX.Element {
               </S.ArrowLeft>
               <S.Slider id={row.id}>
                 {row.items.map((it) => (
-                  <S.Thumb key={it.id} title={it.title}>
-                    <S.ThumbLabel>{it.title}</S.ThumbLabel>
-                  </S.Thumb>
-                ))}
+                  <Link key={it.id} to={`/home/movie/${it.id}`}> {/* Link로 감싸기 */}
+                    <S.Thumb title={it.title}>
+                      <S.ThumbLabel>{it.title}</S.ThumbLabel>
+                    </S.Thumb>
+                  </Link>
+                 ))}
               </S.Slider>
               <S.ArrowRight
                 className="right"
@@ -154,6 +157,7 @@ export default function Home(): React.JSX.Element {
           </S.Row>
         ))}
       </S.RowSection>
+      <Outlet></Outlet>
     </S.Page>
   );
 }
