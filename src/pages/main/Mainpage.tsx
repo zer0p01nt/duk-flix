@@ -177,7 +177,6 @@ export default function Home(): React.JSX.Element {
 
   return (
     <S.Page>
-      {/* <S.HeaderBar> ... </S.HeaderBar> */}
       <Search />
 
       {/* 히어로(상단 큰 배너) */}
