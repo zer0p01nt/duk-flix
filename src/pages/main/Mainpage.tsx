@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, Outlet } from "react-router-dom"; // Link와 Outlet을 import 합니다.
 import axios from "axios";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
-// import logo from "@/assets/Netflix_Logo_RGB.png";
 import Search from "../Search/Search";
 
 /** 공통 미디어 타입 */
 type Media = {
   id: number;
-  title: string;
-  poster_path: string | null;
+  title?: string;
+  poster_path?: string | null;
   backdrop_path?: string | null;
-  media_type: "movie" | "tv";
+  media_type?: "movie" | "tv";
 };
 
 type RowData = {
@@ -44,7 +44,7 @@ type TMDBListResponse<T> = {
 };
 
 const posterURL = (
-  path: string | null,
+  path: string | null | undefined,
   size: "w154" | "w342" | "w500" = "w342"
 ) => (path ? `https://image.tmdb.org/t/p/${size}${path}` : "");
 
@@ -178,8 +178,6 @@ export default function Home(): React.JSX.Element {
   return (
     <S.Page>
       <Search />
-
-      {/* 히어로(상단 큰 배너) */}
       <S.Hero>
         <S.HeroBackdrop bg={mainbackground} />
         <S.HeroGradient />
@@ -187,24 +185,20 @@ export default function Home(): React.JSX.Element {
           <S.HeroTitle>
             <S.TitleLogo
               src="https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7"
-              alt="극장판 짱구는 못말려 23기 : 나의 이사 이야기 선인장 대습격"
+              alt="극장판 짱구는 못말려 23기"
             />
           </S.HeroTitle>
-
           <S.HeroDesc>
             멕시코 지사로 발령이 난 아빠를 따라 함께 이사를 한 짱구 가족.
             무시무시한 선인장 괴물에 맞서, 짱구네 식구들의 서바이벌 승부가
             시작된다.
           </S.HeroDesc>
-
           <S.BtnRow>
             <S.PlayBtn>▶ 재생</S.PlayBtn>
             <S.InfoBtn>ⓘ 상세 정보</S.InfoBtn>
           </S.BtnRow>
         </S.HeroContent>
       </S.Hero>
-
-      {/* 가로 슬라이더 영역 */}
       <S.RowSection>
         {rows.map((row) => (
           <S.Row key={row.id}>
@@ -217,7 +211,6 @@ export default function Home(): React.JSX.Element {
               >
                 ◀
               </S.ArrowLeft>
-
               <S.Slider
                 id={row.id}
                 ref={(el) => {
@@ -227,17 +220,18 @@ export default function Home(): React.JSX.Element {
                 {row.items.map((it) => {
                   const poster = posterURL(it.poster_path, "w342");
                   return (
-                    <S.Thumb
+                    // 상세페이지 오류 해결 위해 링크 수정
+                    <Link
                       key={`${row.id}-${it.media_type}-${it.id}`}
-                      $bg={poster || ""}
-                      title={it.title}
+                      to={`/home/${it.media_type}/${it.id}`}
                     >
-                      <S.ThumbLabel>{it.title}</S.ThumbLabel>
-                    </S.Thumb>
+                      <S.Thumb $bg={poster || ""} title={it.title}>
+                        <S.ThumbLabel>{it.title}</S.ThumbLabel>
+                      </S.Thumb>
+                    </Link>
                   );
                 })}
               </S.Slider>
-
               <S.ArrowRight
                 aria-label="right"
                 onClick={() => handleScroll(row.id, 600)}
@@ -248,6 +242,7 @@ export default function Home(): React.JSX.Element {
           </S.Row>
         ))}
       </S.RowSection>
+      <Outlet />
     </S.Page>
   );
 }

@@ -147,25 +147,27 @@ useEffect(() => {
 // const { pathname, search } = useLocation();
 
 useEffect(() => {
-  const q = query.trim();
+    const q = query.trim();
+    if (!isSearchRoute && !q) return; // 메인 페이지이고 검색어가 없으면 아무것도 하지 않음
 
-  const timer = setTimeout(() => {
-    if (q) {
-      const next = `/search?query=${encodeURIComponent(q)}`;
-      const current = `${pathname}${search}`;
-      if (current !== next) {
-        navigate(next, { replace: true });
+    //검색어가 없는 경우에만 홈으로 이동으로 변경
+    const timer = setTimeout(() => {
+      if (q) {
+        const next = `/search?query=${encodeURIComponent(q)}`;
+        const current = `${pathname}${search}`;
+        if (current !== next) {
+          navigate(next, { replace: true });
+        }
+      } else if (isSearchRoute) { 
+        navigate("/home", { replace: true });
+        setBannerMode("none");
+        setRelated([]);
+        setMovies([]);
       }
-    } else {
-      if (pathname !== "/home") navigate("/home", { replace: true });
-      setBannerMode("none");
-      setRelated([]);
-      setMovies([]);
-    }
-  }, 300);
-
-  return () => clearTimeout(timer);
-}, [query, pathname, search, navigate]);
+    }, 300);
+  
+    return () => clearTimeout(timer);
+  }, [query, pathname, search, navigate, isSearchRoute]);
 
 
 // 추천어 생성

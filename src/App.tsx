@@ -12,7 +12,7 @@ import Search from "./pages/Search/Search";
 import Home from "./pages/main/Mainpage";
 import SignUp from "./pages/SignUp/SignUp";
 import PasswordReset from "./pages/PasswordReset/PasswordReset";
-import SearchResults from "./pages/Search/SearchResults";
+import DetailPage from "./pages/DetailPage/DetailPage";
 
 const qc = new QueryClient();
 
@@ -26,9 +26,13 @@ function App(): React.JSX.Element {
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/search' element={<Search />} />
-          <Route path='/home' element={<Home />} />
           <Route path='/password-reset' element={<PasswordReset />} />
-          <Route path="/search" element={<SearchResults />} />
+
+          {/* tv 프로그램은 인식이 안돼서 수정 */}
+          <Route path='/home' element={<Home />}>
+            <Route path=':mediaType/:mediaId' element={<DetailPage />} />
+          </Route>
+          
         </Routes>
       </ThemeProvider>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
