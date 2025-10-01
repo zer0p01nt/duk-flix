@@ -17,7 +17,6 @@ export const HeaderContainer = styled.div`
   height: 90vh;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 2rem;
   min-height: 31rem;
   display: flex;
   justify-content: center;
@@ -47,6 +46,10 @@ export const WelcomeHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  padding: 10px 2.625rem;
+  ${media.mobile`
+    padding: 10px 1.5rem;
+  `}
 `;
 
 export const Logo = styled.button`
@@ -61,6 +64,10 @@ export const Logo = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  ${media.tablet`
+    width: 100px;
+    height: 45px;
+  `}
 `;
 
 export const Console = styled.div`
@@ -107,6 +114,7 @@ export const CenterBox = styled.div`
   text-align: center;
   z-index: 10;
   gap: 1rem;
+  padding: 0 1.5rem;
 `;
 
 export const CenterTitle = styled.div`
@@ -249,8 +257,8 @@ export const Main = styled.div`
   align-items: center;
   gap: 4rem;
   color: ${theme.color.white};
-  padding-bottom: 4rem;
   width: 100%;
+  padding: 0 1.5rem 4rem;
 `;
 
 export const PopCornWrapper = styled.div`
