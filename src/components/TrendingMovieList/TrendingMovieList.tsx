@@ -36,7 +36,7 @@ export default function TrendingMovieList(): React.JSX.Element {
 
   const handleScroll = (direction: "left" | "right") => {
     if (ref.current) {
-      const scrollAmount = ref.current.clientWidth * 0.8;
+      const scrollAmount = ref.current.clientWidth * 0.9;
 
       const distance = direction === "left" ? -scrollAmount : scrollAmount;
 

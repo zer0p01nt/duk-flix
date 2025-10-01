@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { theme } from "@/styles/theme";
+import { media } from "@/styles/media";
 
 export const MainContainer = styled.div`
   width: 100%;
@@ -18,6 +19,10 @@ export const Header = styled.div<{ $isSignUp: boolean }>`
   align-items: center;
   border-bottom: ${({ $isSignUp }) =>
     $isSignUp ? `1px solid ${theme.color.signUpGray} ` : "1px solid #1A1A1A"};
+
+  ${media.mobile`
+    padding: 0 1.5rem;
+  `}
 `;
 
 export const ToLogin = styled.a`

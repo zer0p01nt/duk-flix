@@ -47,6 +47,9 @@ export const WelcomeHeader = styled.header`
   align-items: center;
   z-index: 10;
   padding: 10px 2.625rem;
+  ${media.mobile`
+    padding: 10px 1.5rem;
+  `}
 `;
 
 export const Logo = styled.button`
@@ -111,6 +114,7 @@ export const CenterBox = styled.div`
   text-align: center;
   z-index: 10;
   gap: 1rem;
+  padding: 0 1.5rem;
 `;
 
 export const CenterTitle = styled.div`
@@ -253,8 +257,8 @@ export const Main = styled.div`
   align-items: center;
   gap: 4rem;
   color: ${theme.color.white};
-  padding-bottom: 4rem;
   width: 100%;
+  padding: 0 1.5rem 4rem;
 `;
 
 export const PopCornWrapper = styled.div`
