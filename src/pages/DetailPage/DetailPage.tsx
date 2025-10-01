@@ -1,8 +1,8 @@
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import * as S from "./DetailPageStyle";
-// 👇 아이콘 컴포넌트들을 import 합니다.
-import { IconThumbsUp, IconThumbsDown, IconDoubleThumbsUp } from "@/components/Icons/Icons";
+import { IconThumbsUp, IconThumbsDown, IconDoubleThumbsUp } from "../../components/icons/Icons";
 
 const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE = "https://api.themoviedb.org/3";
@@ -21,6 +21,9 @@ export default function DetailPage() {
   const navigate = useNavigate();
   const { mediaType, mediaId } = useParams<{ mediaType: string; mediaId: string }>();
 
+  const [isRatingMenuOpen, setIsRatingMenuOpen] = useState(false);
+  const ratingContainerRef = useRef<HTMLDivElement>(null);
+
   const {
     data: content,
     isLoading,
@@ -31,15 +34,23 @@ export default function DetailPage() {
     enabled: !!mediaType && !!mediaId,
   });
 
-  const handleClose = () => navigate(-1);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ratingContainerRef.current && !ratingContainerRef.current.contains(event.target as Node)) {
+        setIsRatingMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ratingContainerRef]);
 
+  const handleClose = () => navigate(-1);
   const title = content?.title || content?.name;
   const releaseDate = content?.release_date || content?.first_air_date;
   const runtime = content?.runtime ?? (content?.episode_run_time ? content.episode_run_time[0] : 0);
-
-  const backdropUrl = content?.backdrop_path
-    ? `${TMDB_IMG_ORIGINAL}${content.backdrop_path}`
-    : "";
+  const backdropUrl = content?.backdrop_path ? `${TMDB_IMG_ORIGINAL}${content.backdrop_path}` : "";
 
   return (
     <S.Overlay onClick={handleClose}>
@@ -55,24 +66,27 @@ export default function DetailPage() {
               <S.Title>{title}</S.Title>
               <S.ActionButtons>
                 <S.PlayButton>▶ 재생</S.PlayButton>
-                {/* 👇 이모티콘을 아이콘 컴포넌트로 교체 */}
                 <S.ActionButton data-tooltip="내가 찜한 콘텐츠에 추가">+</S.ActionButton>
-                <S.RatingContainer>
-                  <S.ActionButton data-tooltip="평가">
+                
+                <S.RatingContainer ref={ratingContainerRef} $isOpen={isRatingMenuOpen}>
+                  <S.ActionButton
+                    data-tooltip="평가"
+                    onClick={() => setIsRatingMenuOpen(prev => !prev)}
+                  >
                     <IconThumbsUp />
                   </S.ActionButton>
+                  
                   <S.RatingMenu>
-                    <S.RatingOption data-tooltip="맘에 안 들어요">
-                      <IconThumbsDown />
-                    </S.RatingOption>
-                    <S.RatingOption data-tooltip="좋아요">
-                      <IconThumbsUp />
-                    </S.RatingOption>
-                    <S.RatingOption data-tooltip="최고예요!">
-                      <IconDoubleThumbsUp />
-                    </S.RatingOption>
+                    <S.RatingOption data-tooltip="맘에 안 들어요"><IconThumbsDown /></S.RatingOption>
+                    <S.RatingOption data-tooltip="좋아요"><IconThumbsUp /></S.RatingOption>
+                    <S.RatingOption data-tooltip="최고예요!"><IconDoubleThumbsUp /></S.RatingOption>
                   </S.RatingMenu>
+                  
+                  <S.CloseRatingButton onClick={() => setIsRatingMenuOpen(false)}>
+                    ✕
+                  </S.CloseRatingButton>
                 </S.RatingContainer>
+
               </S.ActionButtons>
             </S.BackdropContainer>
             <S.Content>

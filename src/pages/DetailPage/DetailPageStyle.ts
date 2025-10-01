@@ -130,7 +130,6 @@ export const ActionButton = styled.button`
   }
 `;
 
-// 👇 이 부분의 padding과 border를 수정했습니다.
 export const RatingMenu = styled.div`
   position: absolute;
   bottom: 0;
@@ -140,16 +139,29 @@ export const RatingMenu = styled.div`
   align-items: center;
   background-color: #2a2a2a;
   border-radius: 30px;
-  padding: 8px; /* 4px -> 8px 로 수정 */
-  gap: 4px;
-  /* border: 1px solid #4d4d4d; */ /* 테두리 제거 */
+  padding: 8px 12px;
+  gap: 12px;
   
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;
+  pointer-events: none;
 `;
 
-export const RatingContainer = styled.div`
+export const CloseRatingButton = styled(ActionButton)`
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+`;
+
+export const RatingContainer = styled.div<{ $isOpen: boolean }>`
   position: relative;
   width: 44px;
   height: 44px;
@@ -158,16 +170,17 @@ export const RatingContainer = styled.div`
     transition: all 0.2s ease;
   }
   
-  &:hover {
+  ${({ $isOpen }) => $isOpen && `
     & > ${ActionButton} {
       opacity: 0;
       visibility: hidden;
     }
-    & > ${RatingMenu} {
+    & > ${RatingMenu}, & > ${CloseRatingButton} {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
     }
-  }
+  `}
 `;
 
 export const RatingOption = styled(ActionButton)`
@@ -181,15 +194,14 @@ export const RatingOption = styled(ActionButton)`
   }
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
   }
 
-  /* 툴팁 텍스트 박스 */
   &::before {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: calc(100% + 10px); /* 꼬리가 들어갈 공간(5px)만큼 더 위로 */
+    bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
     background-color: #e6e6e6;
@@ -203,23 +215,22 @@ export const RatingOption = styled(ActionButton)`
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    /* z-index 제거 */
   }
   
-  /* 툴팁 꼬리(말풍선 모양) */
   &::after {
     content: "";
     position: absolute;
-    bottom: calc(100% + 5px); /* 텍스트 박스 바로 아래에 붙도록 위치 수정 */
+    bottom: calc(100% + 4px);
     left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-    width: 10px;
-    height: 10px;
-    background-color: #e6e6e6;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #e6e6e6;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
-    /* z-index 제거 */
   }
   
   &:hover::before,
