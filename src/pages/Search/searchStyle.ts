@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import profile from "@/assets/profile.png";
+import { theme } from "@/styles/theme";
 
 /* 페이지 & 공통 */
 export const SearchPage = styled.div`
@@ -23,12 +25,14 @@ export const HeaderBar = styled.header`
   top: 0;
   z-index: 50; */
   /* position: fixed; */
-  position: fixed;        /* ✅ 항상 상단 고정 */
-  top: 0; left: 0; right: 0;
+  position: fixed; /* ✅ 항상 상단 고정 */
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   width: 100%;
-  height: 50px;           /* 실제 높이: 50 + padding(16*2) = 82px */
-  box-sizing: border-box; 
+  height: 50px; /* 실제 높이: 50 + padding(16*2) = 82px */
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -49,7 +53,7 @@ export const LogoImg = styled.img`
 
   @media (max-width: 642px) {
     height: 30px;
-      width: auto;
+    width: auto;
   }
 `;
 
@@ -60,9 +64,9 @@ export const Nav = styled.nav`
   font-size: 14px;
   opacity: 0.95;
 
-@media (max-width: 841px) {
-  display: none;
-}
+  @media (max-width: 841px) {
+    display: none;
+  }
 `;
 
 export const NavItem = styled.button`
@@ -71,6 +75,7 @@ export const NavItem = styled.button`
   color: #fff;
   cursor: pointer;
   padding: 6px 0;
+  white-space: nowrap;
   &:hover {
     opacity: 0.7;
   }
@@ -95,9 +100,9 @@ export const IconBox = styled.div`
   height: 28px;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   border-radius: 999px;
-  &:hover{
+  &:hover {
     cursor: pointer;
   }
 `;
@@ -108,23 +113,106 @@ export const SearchIconBox = styled.div`
   height: 28px;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   border-radius: 999px;
-  &:hover{
+  &:hover {
     cursor: pointer;
   }
+`;
+
+// 프로필 드롭다운 관련 스타일 추가
+export const AvatarWrapper = styled.div`
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+
+export const AvatarBox = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 8px;
 `;
 
 export const Avatar = styled.div`
-  width: 28px;
-  height: 28px;
-  border-radius: 30%;
-  background: #9c88ff;
-    &:hover{
-    cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-image: url(${profile});
+  flex-shrink: 0;
+`;
+
+export const AvatarTriangle = styled.div<{ $isRotated: boolean }>`
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+  margin-left: 5px;
+  transition: transform 200ms cubic-bezier(0.21, 0, 0.07, 1);
+  transition-delay: 150ms;
+
+  transform: ${({ $isRotated }) =>
+    $isRotated ? "rotate(180deg)" : "rotate(0deg)"};
+`;
+
+export const ProfileDropdown = styled.ul<{ $isOpen: boolean }>`
+  position: absolute;
+  top: 100%;
+  right: 42px;
+  margin-top: 20px;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #333;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  transition: all 200ms cubic-bezier(0.21, 0, 0.07, 1);
+  transition-delay: 150ms;
+
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
+`;
+
+export const ProfileDropdownIcon = styled.div`
+  border: 7px solid transparent;
+  border-bottom-color: #e5e5e5;
+  height: 0;
+  right: 31px;
+  margin-left: -7px;
+  position: absolute;
+  top: -16px;
+  width: 0;
+`;
+
+export const ProfileDropdownItem = styled.li<{ $isButton: boolean }>`
+  border: none;
+  background: none;
+  padding: 8px;
+  cursor: ${({ $isButton }) => $isButton && "pointer"};
+  color: ${theme.color.white};
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  justify-content: ${({ $isButton }) => $isButton && "center"};
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: ${({ $isButton }) => $isButton && "underline"};
   }
 `;
 
+export const ProfileDropdownHr = styled.hr`
+  border: none;
+  border-top: 1px solid #333;
+  margin: 5px 0;
+`;
 
 // 검색
 export const SearchBox = styled.input`
@@ -141,6 +229,8 @@ export const SearchBtn = styled.div`
   border: 1px solid #fff;
   display: flex;
   justify-content: center;
+  padding: 0 4px;
+  gap: 4px;
 `;
 
 export const Searchimg = styled.div`
@@ -149,80 +239,78 @@ export const Searchimg = styled.div`
   height: 28px;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   border-radius: 999px;
 `;
 
 export const SearchDel = styled.div`
-font-size: 28px;
-margin-right: 2px;
-cursor: pointer;
+  font-size: 28px;
+  margin-right: 2px;
+  cursor: pointer;
 `;
-
 
 // 반응형 메뉴바
 export const SearchNav = styled.div`
   font-size: clamp(8px, 2vw, 14px);
   cursor: pointer;
+  white-space: nowrap;
 `;
 
 export const Dropdown = styled.div`
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.54);
-    border: 1px solid hsla(0, 0%, 100%, .15);
-    box-sizing: border-box;
-    cursor: pointer;
-    font-size: 13px;
-    line-height: 21px;
-    text-align: center;
-margin-left: -86px;
-    border-top: 2px solid  #e5e5e5;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid hsla(0, 0%, 100%, 0.15);
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 21px;
+  text-align: center;
+  margin-left: -86px;
+  border-top: 2px solid #e5e5e5;
 
-    width: 200px;
-        top: 90px;
+  width: 200px;
+  top: 90px;
 `;
 
 export const Ul = styled.ul`
-display: none;
-@media (max-width: 841px) {
-  display: block;
-}
+  display: none;
+  @media (max-width: 841px) {
+    display: block;
+  }
 `;
 export const Li = styled.li`
-    display: list-item;
-    unicode-bidi: isolate;
+  display: list-item;
+  unicode-bidi: isolate;
 `;
-export const DropdownUl = styled.ul`
-
-`;
+export const DropdownUl = styled.ul``;
 export const DropdownLi = styled.li`
-padding: 15px 0;
-&:hover{
-  background-color:  rgba(71, 71, 71, 0.17);
-}
+  padding: 15px 0;
+  &:hover {
+    background-color: rgba(71, 71, 71, 0.17);
+  }
 `;
 
 export const DropdownIcon = styled.div`
-    border: 7px solid transparent;
-    border-bottom-color: #e5e5e5;
-    height: 0;
-    left: 50%;
-    margin-left: -7px;
-    position: absolute;
-    top: -16px;
-    width: 0;
+  border: 7px solid transparent;
+  border-bottom-color: #e5e5e5;
+  height: 0;
+  left: 50%;
+  margin-left: -7px;
+  position: absolute;
+  top: -16px;
+  width: 0;
 `;
 // 헤더끝
 
-
 // 메인 공통
 export const main = styled.div`
-margin-top: 30px`;
+  margin-top: 30px;
+`;
 
 // 추천
 export const RecommendBox = styled.div`
-display: flex;
-margin: 20px 30px 0 50px;
+  display: flex;
+  margin: 20px 30px 0 50px;
 `;
 export const RecommendTitle = styled.div`
   font-size: clamp(14px, 1.2vw, 16px);
@@ -230,30 +318,29 @@ export const RecommendTitle = styled.div`
   white-space: nowrap;
 `;
 export const Recommend = styled.div`
-margin-left: 10px;
-display: flex;
-    flex-flow: wrap;
-gap: 10px;
-width: 100%;
+  margin-left: 10px;
+  display: flex;
+  flex-flow: wrap;
+  gap: 10px;
+  width: 100%;
 `;
 export const RecommendIcon = styled.div`
   font-size: clamp(14px, 1.2vw, 17px);
-  border-right: 1px solid  rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
   padding-right: 10px;
   &:last-child {
     border-right: none;
     padding-left: 0;
   }
   cursor: pointer;
-  &:hover{
+  &:hover {
     color: red;
   }
 `;
 
-
 // 추천 영화
 export const ReMovie = styled.div`
-margin-top: 30px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
 `;
@@ -263,10 +350,10 @@ export const MovieGrid = styled.div`
   gap: 12px;
   margin: 0 60px;
 
-/* 2 */
+  /* 2 */
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-/* 개수 조정 */
+  /* 개수 조정 */
   @media (min-width: 700px) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -304,33 +391,30 @@ export const Poster = styled.img`
   }
 `;
 
-
 // 결과 없음 페이지
 export const text = styled.div`
-text-align: center;
-margin-top: 60px;
+  text-align: center;
+  margin-top: 60px;
 `;
 
 export const NoSearch = styled.div`
-display: inline-block;
-text-align: left;
+  display: inline-block;
+  text-align: left;
 `;
 
-export const NoSearchTitle = styled.div`
-`;
+export const NoSearchTitle = styled.div``;
 export const ReSearch = styled.div`
-margin: 13px 0;
+  margin: 13px 0;
 `;
 export const ReSearchUl = styled.ul`
-margin-left: 40px;
+  margin-left: 40px;
 `;
 export const ReSearchLi = styled.li`
-list-style-type: disc;
+  list-style-type: disc;
 `;
 
-
-// 
+//
 export const ReOther = styled.div`
-font-size: 23px;
-margin: 0 54px 10px 54px;
+  font-size: 23px;
+  margin: 0 54px 10px 54px;
 `;
