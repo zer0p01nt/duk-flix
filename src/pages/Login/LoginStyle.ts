@@ -8,7 +8,6 @@ export const Background = styled.div`
   min-height: 31rem;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 1rem;
   position: relative;
   display: flex;
   align-items: center;

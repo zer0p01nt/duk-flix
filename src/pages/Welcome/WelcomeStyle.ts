@@ -17,7 +17,6 @@ export const HeaderContainer = styled.div`
   height: 90vh;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 2rem;
   min-height: 31rem;
   display: flex;
   justify-content: center;
@@ -47,6 +46,7 @@ export const WelcomeHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  padding: 10px 2.625rem;
 `;
 
 export const Logo = styled.button`
@@ -61,6 +61,10 @@ export const Logo = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  ${media.tablet`
+    width: 100px;
+    height: 45px;
+  `}
 `;
 
 export const Console = styled.div`
