@@ -2,8 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import * as S from "./searchStyle";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { useAuth } from "@/hooks/useAuth";
 
 // 컴포넌트
 export default function Search({
@@ -314,33 +313,24 @@ export default function Search({
   // 프로필 드롭다운
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  // 유저 이메일 주소 가져오기
+  // AuthContext 불러옴
+  const { currentUser, logout } = useAuth();
+  const userEmail = currentUser?.email || "Guest";
+
   // 로그아웃 로직
   const handleSignOut = useCallback(async () => {
     const c = confirm("로그아웃하시겠습니까?");
     if (c) {
       try {
-        await signOut(auth);
+        await logout();
         navigate("/");
       } catch {
         alert("로그아웃에 실패했습니다.");
       }
     }
     setIsProfileOpen(false);
-  }, [navigate]);
-
-  // 유저 이메일 주소 가져오기
-  const [userEmail, setUserEmail] = useState<string | null>("");
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("Guest");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  }, [logout, navigate]);
 
   return (
     <S.SearchPage
