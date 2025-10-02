@@ -37,7 +37,10 @@ function App(): React.JSX.Element {
               <Route path='/home' element={<Home />}>
                 <Route path=':mediaType/:mediaId' element={<DetailPage />} />
               </Route>
-              <Route path='/search' element={<Search />} />
+              {/* 상세페이지 검색 페이지에 중첩 될 수 잇도록 변경*/}
+              <Route path="/search" element={<Search />}>
+                <Route path=":mediaType/:mediaId" element={<DetailPage />} />
+              </Route>
             </Route>
           </Routes>
         </AuthProvider>

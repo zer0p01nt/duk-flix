@@ -1,8 +1,9 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import * as S from "./searchStyle";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import Footer from "@/components/Footer/Footer";
 
 // 컴포넌트
 export default function Search({
@@ -21,12 +22,14 @@ export default function Search({
   const isSearchRoute = pathname.startsWith("/search");
 
   useEffect(() => {
-    if (!isSearchRoute) return;
-    const params = new URLSearchParams(search);
-    const q = params.get("query") ?? "";
-    if (q !== query) setQuery(q); // 첫 글자부터 바로 fetch 돌게 함
+    // 상세 페이지가 아닐 때만 URL의 쿼리를 상태에 동기화
+    if (pathname === "/search") {
+      const params = new URLSearchParams(search);
+      const q = params.get("query") ?? "";
+      if (q !== query) setQuery(q);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSearchRoute, search]);
+  }, [pathname, search]);
 
   useEffect(() => {
     if (isSearchRoute) setShowSearch(true);
@@ -36,10 +39,6 @@ export default function Search({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // const { pathname } = useLocation();
-  // const isSearchRoute = pathname.startsWith("/search");
-
-  // const handleClearSearch = () => {
   const navigate = useNavigate();
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -78,6 +77,7 @@ export default function Search({
     name?: string;
     poster_path: string | null;
     backdrop_path?: string | null;
+    media_type: "movie" | "tv";
   };
 
   type Suggestion =
@@ -133,9 +133,12 @@ export default function Search({
         if (!res.ok)
           throw new Error(data.status_message || `HTTP ${res.status}`);
 
-        const list: MovieItem[] = ((data.results as MovieItem[]) || []).filter(
-          (it) => it.poster_path || it.backdrop_path
-        );
+        const list: MovieItem[] = ((data.results as MultiSearchItem[]) || [])
+          .filter(
+            (it): it is MovieItem =>
+              (it.media_type === "movie" || it.media_type === "tv") &&
+              (it.poster_path || it.backdrop_path)
+          );
         setMovies(list);
       } catch (e: unknown) {
         if (e instanceof Error && e.name !== "AbortError") setError(e.message);
@@ -150,22 +153,23 @@ export default function Search({
     };
   }, [query, TMDB_KEY]);
 
-  // 이동
-  // const { pathname, search } = useLocation();
-
+  // 이동 로직 수정
   useEffect(() => {
     const q = query.trim();
-    if (!isSearchRoute && !q) return; // 메인 페이지이고 검색어가 없으면 아무것도 하지 않음
+    if (!isSearchRoute && !q) return;
 
-    //검색어가 없는 경우에만 홈으로 이동으로 변경
     const timer = setTimeout(() => {
+      // 검색어가 있으면 URL 업데이트
       if (q) {
         const next = `/search?query=${encodeURIComponent(q)}`;
-        const current = `${pathname}${search}`;
-        if (current !== next) {
+        const current = `/search${search}`;
+        // 현재 페이지가 검색 결과 페이지일 때만 URL을 변경
+        if (pathname === "/search" && current !== next) {
           navigate(next, { replace: true });
         }
-      } else if (isSearchRoute) {
+      }
+      // 검색어가 없고, 현재 페이지가 검색 결과 페이지일 때만 홈으로 이동
+      else if (isSearchRoute && pathname === "/search") {
         navigate("/home", { replace: true });
         setBannerMode("none");
         setRelated([]);
@@ -191,13 +195,11 @@ export default function Search({
         const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
         const titleData = await titleRes.json().catch(() => ({}));
 
-        // 1) 타입 가드 추가
         const isMovieOrTv = (
           x: MultiSearchItem
         ): x is MultiSearchItem & { media_type: "movie" | "tv" } =>
           x.media_type === "movie" || x.media_type === "tv";
 
-        // 2) filter에 타입 가드 사용
         const titleSugs: Suggestion[] = (
           (titleData.results ?? []) as MultiSearchItem[]
         )
@@ -210,7 +212,6 @@ export default function Search({
             media: it.media_type,
           }));
 
-        // 2) 키워드(분위기) 후보
         const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(
           q
         )}&page=1`;
@@ -238,7 +239,7 @@ export default function Search({
     };
   }, [query, TMDB_KEY]);
 
-  //추천클릭
+  //추천클릭 (버그 수정)
   const handleSuggestClick = async (s: Suggestion) => {
     setRelated([]);
     setBannerLabel(s.label);
@@ -254,9 +255,9 @@ export default function Search({
         const url = `${TMDB_BASE}${path}?api_key=${TMDB_KEY}&language=ko-KR&page=1`;
         const res = await fetch(url);
         const data = await res.json().catch(() => ({}));
-        const list: MovieItem[] = ((data.results ?? []) as MovieItem[]).filter(
-          (it) => it.poster_path || it.backdrop_path
-        );
+        const list: MovieItem[] = ((data.results ?? []) as MovieItem[])
+          .filter((it) => it.poster_path || it.backdrop_path)
+          .map((it) => ({ ...it, media_type: s.media })); // media_type 추가
         setRelated(list);
       } finally {
         setRelatedLoading(false);
@@ -270,9 +271,9 @@ export default function Search({
         const url = `${TMDB_BASE}/discover/movie?api_key=${TMDB_KEY}&language=ko-KR&include_adult=false&with_keywords=${s.id}&sort_by=popularity.desc&page=1`;
         const res = await fetch(url);
         const data = await res.json().catch(() => ({}));
-        const list: MovieItem[] = ((data.results ?? []) as MovieItem[]).filter(
-          (it) => it.poster_path || it.backdrop_path
-        );
+        const list: MovieItem[] = ((data.results ?? []) as MovieItem[])
+          .filter((it) => it.poster_path || it.backdrop_path)
+          .map((it) => ({ ...it, media_type: "movie" })); // media_type 추가
         setRelated(list);
       } finally {
         setRelatedLoading(false);
@@ -342,7 +343,7 @@ export default function Search({
       {/* 헤더 */}
       <S.HeaderBar>
         <S.Logo>
-          <S.LogoImg src={logoSrc || logo} alt='Netflix' />
+          <S.LogoImg src={logoSrc || logo} alt="Netflix" />
         </S.Logo>
 
         {/* 메뉴 */}
@@ -389,54 +390,36 @@ export default function Search({
         <S.HeaderActions>
           {showSearch && (
             <S.SearchBtn ref={searchRef}>
-              <S.Searchimg aria-label='검색'>
+              <S.Searchimg aria-label="검색">
                 <S.Svg
-                  viewBox='0 0 24 24'
-                  role='img'
-                  aria-hidden='true'
-                  focusable='false'
+                  viewBox="0 0 24 24"
+                  role="img"
+                  aria-hidden="true"
+                  focusable="false"
                 >
                   <path
-                    fillRule='evenodd'
-                    clipRule='evenodd'
-                    d='M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z'
-                    fill='currentColor'
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z"
+                    fill="currentColor"
                   />
                 </S.Svg>
               </S.Searchimg>
-              {/* <S.SearchBox
-  placeholder="제목, 사람, 장르"
-  value={query}
-  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-    const q = e.target.value;
-    setQuery(q);
-  if (q.trim()) {
-    navigate(`/search?query=${encodeURIComponent(q)}`, { replace: true });
-   } else {
 
-     navigate("/home", { replace: true });
-     setBannerMode("none");
-     setRelated([]);
-     setMovies([]);
-   }
-  }}
-/> */}
               <S.SearchBox
-                placeholder='제목, 사람, 장르'
+                placeholder="제목, 사람, 장르"
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
-                  setShowSearch(true); // 입력 중엔 검색창 유지
+                  setShowSearch(true);
                 }}
               />
-
-              {/* <S.SearchBox placeholder="제목, 사람, 장르" value={query} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)} /> */}
 
               {query && (
                 <S.SearchDel
                   onClick={handleClearSearch}
-                  role='button'
-                  aria-label='검색어 삭제'
+                  role="button"
+                  aria-label="검색어 삭제"
                 >
                   ⨯
                 </S.SearchDel>
@@ -446,36 +429,36 @@ export default function Search({
 
           {!showSearch && (
             <S.SearchIconBox
-              aria-label='검색'
+              aria-label="검색"
               onClick={() => setShowSearch(true)}
             >
               <S.Svg
-                viewBox='0 0 24 24'
-                role='img'
-                aria-hidden='true'
-                focusable='false'
+                viewBox="0 0 24 24"
+                role="img"
+                aria-hidden="true"
+                focusable="false"
               >
                 <path
-                  fillRule='evenodd'
-                  clipRule='evenodd'
-                  d='M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z'
-                  fill='currentColor'
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z"
+                  fill="currentColor"
                 />
               </S.Svg>
             </S.SearchIconBox>
           )}
-          <S.IconBox aria-label='알림'>
+          <S.IconBox aria-label="알림">
             <S.Svg
-              viewBox='0 0 24 24'
-              role='img'
-              aria-hidden='true'
-              focusable='false'
+              viewBox="0 0 24 24"
+              role="img"
+              aria-hidden="true"
+              focusable="false"
             >
               <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z'
-                fill='currentColor'
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z"
+                fill="currentColor"
               ></path>
             </S.Svg>
           </S.IconBox>
@@ -497,7 +480,7 @@ export default function Search({
               </S.ProfileDropdownItem>
               <S.ProfileDropdownHr />
               <S.ProfileDropdownItem
-                as='button'
+                as="button"
                 onClick={handleSignOut}
                 $isButton={true}
               >
@@ -552,7 +535,7 @@ export default function Search({
             </div>
           )}
 
-          {hasQuery && !loading && !error && movies.length > 0 && (
+          {hasQuery && !loading && !error && gridItems.length > 0 && (
             <S.MovieGrid>
               {gridItems.map((m) => {
                 const title = m.title || m.name || "제목 없음";
@@ -561,11 +544,11 @@ export default function Search({
                   (m.backdrop_path && `${TMDB_IMG}${m.backdrop_path}`) ||
                   "";
                 return (
-                  <S.Movie key={m.id}>
-                    <S.MovieLink href={`#movie-${m.id}`}>
+                  <Link key={m.id} to={`/search/${m.media_type}/${m.id}`}>
+                    <S.Movie>
                       <S.Poster src={img} alt={title} title={title} />
-                    </S.MovieLink>
-                  </S.Movie>
+                    </S.Movie>
+                  </Link>
                 );
               })}
             </S.MovieGrid>
@@ -596,6 +579,11 @@ export default function Search({
           )}
         </S.ReMovie>
       </S.main>
+      <Outlet />
+      {/* 푸터 */}
+      {isSearchRoute && (
+        <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+      )}
     </S.SearchPage>
   );
 }

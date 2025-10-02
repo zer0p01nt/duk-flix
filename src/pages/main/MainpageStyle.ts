@@ -17,10 +17,10 @@ export const Hero = styled.section`
   height: clamp(380px, 46vw, 720px);
   overflow: hidden;
 `;
-export const HeroBackdrop = styled.div<{ bg: string }>`
+export const HeroBackdrop = styled.div<{ $bg: string }>`
   position: absolute;
   inset: 0;
-  background: ${({ bg }) => `url(${bg}) center/cover no-repeat`};
+  background: ${({ $bg }) => `url(${$bg}) center/cover no-repeat`};
   filter: brightness(0.95);
 `;
 export const HeroGradient = styled.div`
@@ -70,12 +70,41 @@ export const PlayBtn = styled.button`
   color: #000;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
 `;
 export const InfoBtn = styled(PlayBtn)`
   background: rgba(109, 109, 110, 0.7);
   color: #fff;
 `;
+export const ActionButton = styled.button`
+  position: relative;
+  width: 38.46px;
+  height: 38.46px;
+  padding: 8.112px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background-color: rgba(42, 42, 42, 0.6);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    border-color: white;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+`;
 
+export const VolumeControl = styled(ActionButton)`
+  position: absolute;
+  right: 4vw;
+  bottom: 8vw;
+  z-index: 10;
+`;
 // 슬라이더
 export const RowSection = styled.section`
   display: grid;

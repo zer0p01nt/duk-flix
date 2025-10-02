@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import Search from "../Search/Search";
 import Footer from "@/components/Footer/Footer";
+import { useQuery } from "@tanstack/react-query";
+import YouTube from "react-youtube";
+import { IconVolume, IconVolumeMuted } from "@/components/icons/Icons";
 
 /** 공통 미디어 타입 */
 type Media = {
@@ -44,6 +47,8 @@ type TMDBListResponse<T> = {
   total_results: number;
 };
 
+type VideoInfo = { key?: string };
+
 const posterURL = (
   path: string | null | undefined,
   size: "w154" | "w342" | "w500" = "w342"
@@ -80,13 +85,45 @@ const mapTV = (t: TMDBTVRaw): Media => ({
   media_type: "tv",
 });
 
+const fetchVideos = async (
+  mediaType: string,
+  mediaId: string
+): Promise<VideoInfo> => {
+  const TMDB_KEY = import.meta.env.VITE_TMDB_API_KEY;
+  const TMDB_BASE = "https://api.themoviedb.org/3";
+  const url = `${TMDB_BASE}/${mediaType}/${mediaId}/videos?api_key=${TMDB_KEY}&language=ko-KR`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("비디오 정보를 불러오는 데 실패했습니다.");
+  }
+  const data = await response.json();
+  const trailer = data.results.find(
+    (video: any) => video.type === "Trailer" && video.site === "YouTube"
+  );
+  return trailer ? { key: trailer.key } : {};
+};
+
 export default function Home(): React.JSX.Element {
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const [topKr, setTopKr] = useState<Media[]>([]);
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
   const [popularTV, setPopularTV] = useState<Media[]>([]);
-  const [myList, setMyList] = useState<Media[]>([]);
+  const [myList] = useState<Media[]>([]);
   const [watching, setWatching] = useState<Media[]>([]);
   const sliderRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [isHovering, setIsHovering] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const playerRef = useRef<any>(null);
+
+  
+  const jjangguMovieId = 371236;
+
+  const { data: videoInfo } = useQuery({
+    queryKey: ["videos", "movie", jjangguMovieId],
+    queryFn: () => fetchVideos("movie", jjangguMovieId.toString()),
+    enabled: !!jjangguMovieId,
+  });
+  const trailerKey = videoInfo?.key;
 
   useEffect(() => {
     const api = axios.create({
@@ -176,17 +213,64 @@ export default function Home(): React.JSX.Element {
     el?.scrollBy({ left: delta, behavior: "smooth" });
   };
 
+  const handleVolumeToggle = () => {
+    if (playerRef.current) {
+      if (isMuted) {
+        playerRef.current.unMute();
+      } else {
+        playerRef.current.mute();
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <S.Page>
       <Search />
-      <S.Hero>
-        <S.HeroBackdrop bg={mainbackground} />
+      <S.Hero
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        {isHovering && trailerKey ? (
+          <YouTube
+            videoId={trailerKey}
+            opts={{
+              width: "100%",
+              height: "100%",
+              playerVars: {
+                autoplay: 1,
+                mute: 1,
+                controls: 0,
+                loop: 1,
+                playlist: trailerKey,
+              },
+            }}
+            onReady={(event) => {
+              playerRef.current = event.target;
+              if (isMuted) {
+                event.target.mute();
+              } else {
+                event.target.unMute();
+              }
+            }}
+            style={{
+              position: "absolute",
+              top: "-50%",
+              left: 0,
+              width: "100%",
+              height: "200%",
+              pointerEvents: "none",
+            }}
+          />
+        ) : (
+          <S.HeroBackdrop $bg={mainbackground} />
+        )}
         <S.HeroGradient />
         <S.HeroContent>
           <S.HeroTitle>
             <S.TitleLogo
-              src='https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7'
-              alt='극장판 짱구는 못말려 23기'
+              src="https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7"
+              alt="극장판 짱구는 못말려 23기"
             />
           </S.HeroTitle>
           <S.HeroDesc>
@@ -195,10 +279,22 @@ export default function Home(): React.JSX.Element {
             시작된다.
           </S.HeroDesc>
           <S.BtnRow>
-            <S.PlayBtn>▶ 재생</S.PlayBtn>
-            <S.InfoBtn>ⓘ 상세 정보</S.InfoBtn>
+            <S.PlayBtn
+              as="a"
+              href={`https://www.themoviedb.org/movie/${jjangguMovieId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ▶ 재생
+            </S.PlayBtn>
+            <S.InfoBtn onClick={() => navigate(`/home/movie/${jjangguMovieId}`)}>
+              ⓘ 상세 정보
+            </S.InfoBtn>
           </S.BtnRow>
         </S.HeroContent>
+        <S.VolumeControl onClick={handleVolumeToggle}>
+          {isMuted ? <IconVolumeMuted /> : <IconVolume />}
+        </S.VolumeControl>
       </S.Hero>
       <S.RowSection>
         {rows.map((row) => (
@@ -206,7 +302,7 @@ export default function Home(): React.JSX.Element {
             <S.RowTitle>{row.title}</S.RowTitle>
             <S.SliderWrapper>
               <S.ArrowLeft
-                aria-label='left'
+                aria-label="left"
                 onClick={() => handleScroll(row.id, -600)}
                 style={{ left: 8 }}
               >
@@ -267,7 +363,7 @@ export default function Home(): React.JSX.Element {
               </S.Slider>
 
               <S.ArrowRight
-                aria-label='right'
+                aria-label="right"
                 onClick={() => handleScroll(row.id, 600)}
               >
                 ▶
