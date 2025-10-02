@@ -5,6 +5,8 @@ import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import Search from "../Search/Search";
 import Footer from "@/components/Footer/Footer";
+import { fetchMyListDocs } from "@/util/myList";
+import { useAuth } from "@/hooks/useAuth";
 
 /** 공통 미디어 타입 */
 type Media = {
@@ -84,9 +86,13 @@ export default function Home(): React.JSX.Element {
   const [topKr, setTopKr] = useState<Media[]>([]);
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
   const [popularTV, setPopularTV] = useState<Media[]>([]);
-  const [myList] = useState<Media[]>([]);
+  const [myList, setMyList] = useState<Media[]>([]);
   const [watching, setWatching] = useState<Media[]>([]);
   const sliderRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // 찜한 리스트 불러오기 위한 유저아이디
+  const { currentUser } = useAuth();
+  const userId = currentUser?.uid;
 
   useEffect(() => {
     const api = axios.create({
@@ -132,6 +138,26 @@ export default function Home(): React.JSX.Element {
         const movies = moviePopularRes.data.results.map(mapMovie);
         const tvs = tvPopularRes.data.results.map(mapTV);
 
+        // 내가 찜한 리스트 불러오는 로직
+        const myListDocs = await fetchMyListDocs(userId!);
+        const myListItemPromises = myListDocs.map((item) =>
+          api
+            .get<TMDBMovieRaw | TMDBTVRaw>(`/${item.media_type}/${item.id}`)
+            .then((res) => {
+              // 타입에 따라 mapMovie 또는 mapTV 함수를 사용해 Media 타입으로 변환
+              return item.media_type === "movie"
+                ? mapMovie(res.data as TMDBMovieRaw)
+                : mapTV(res.data as TMDBTVRaw);
+            })
+            .catch((error) => {
+              console.error(error);
+              return null;
+            })
+        );
+        const myListItems = (await Promise.all(myListItemPromises)).filter(
+          (item): item is Media => item !== null
+        );
+
         const banned = new Set<number>();
 
         const mixedKR: Media[] = [];
@@ -152,11 +178,12 @@ export default function Home(): React.JSX.Element {
         setWatching(watchingList);
         setPopularMovies(popularMovieList);
         setPopularTV(popularTVList);
+        setMyList(myListItems);
       } catch (err) {
         console.error("TMDB 로딩 에러:", err);
       }
     })();
-  }, []);
+  }, [userId, myList]);
 
   const rows: RowData[] = useMemo(
     () => [
@@ -232,14 +259,14 @@ export default function Home(): React.JSX.Element {
                         style={{ display: "block" }}
                       >
                         <S.RankItem>
-                          <S.RankSvg viewBox="0 0 200 200" aria-hidden>
+                          <S.RankSvg viewBox='0 0 200 200' aria-hidden>
                             <S.RankText
-                              x="95%"
-                              y="50%"
-                              textAnchor="end"
-                              dominantBaseline="middle"
-                              fontSize="180"
-                              vectorEffect="non-scaling-stroke"
+                              x='95%'
+                              y='50%'
+                              textAnchor='end'
+                              dominantBaseline='middle'
+                              fontSize='180'
+                              vectorEffect='non-scaling-stroke'
                             >
                               {idx + 1}
                             </S.RankText>
