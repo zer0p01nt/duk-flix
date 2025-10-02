@@ -1,7 +1,9 @@
 import { auth } from "@/lib/firebase";
 import { FirebaseError } from "firebase/app";
 import {
+  browserLocalPersistence,
   onAuthStateChanged,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
   type User,
@@ -23,12 +25,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 초기에 로그인 상태 파악
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+    // 로그인 상태 로컬에 저장하는 함수 (초기에만)
+    const setupPersistence = async () => {
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+      } catch (error) {
+        console.error("Firebase Persistence 설정 오류:", error);
+      }
 
-    return () => unsubscribe();
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setCurrentUser(user);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    };
+
+    setupPersistence();
   }, []);
 
   const login = async (email: string, password: string) => {
