@@ -35,7 +35,7 @@ export const HeaderBar = styled.header`
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
 `;
 
-export const Logo = styled.div`
+export const Logo = styled.a`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -63,7 +63,7 @@ export const Nav = styled.nav`
   }
 `;
 
-export const NavItem = styled.button`
+export const NavItem = styled.button<{ $isSelected: boolean }>`
   background: none;
   border: 0;
   color: #fff;
@@ -74,6 +74,7 @@ export const NavItem = styled.button`
     opacity: 0.7;
   }
   font-size: clamp(8px, 1.3vw, 14px);
+  font-weight: ${({ $isSelected }) => $isSelected && "600"};
 `;
 
 export const HeaderActions = styled.div`
@@ -277,11 +278,12 @@ export const Li = styled.li`
   unicode-bidi: isolate;
 `;
 export const DropdownUl = styled.ul``;
-export const DropdownLi = styled.li`
+export const DropdownLi = styled.li<{ $isSelected: boolean }>`
   padding: 15px 0;
   &:hover {
     background-color: rgba(71, 71, 71, 0.17);
   }
+  font-weight: ${({ $isSelected }) => $isSelected && "600"};
 `;
 
 export const DropdownIcon = styled.div`
