@@ -599,7 +599,9 @@ export default function Search({
       </S.main>
             {/* 푸터 */}
             {isSearchRoute && (
+              <S.FooterBox>
             <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+            </S.FooterBox>
             )}
     </S.SearchPage>
   );
