@@ -83,7 +83,7 @@ export default function Home(): React.JSX.Element {
   const [topKr, setTopKr] = useState<Media[]>([]);
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
   const [popularTV, setPopularTV] = useState<Media[]>([]);
-  const [myList, setMyList] = useState<Media[]>([]);
+  const [myList] = useState<Media[]>([]);
   const [watching, setWatching] = useState<Media[]>([]);
   const sliderRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
