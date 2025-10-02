@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 /* 페이지 & 공통 */
 export const Page = styled.div`
   background:#141414;
@@ -7,7 +8,7 @@ export const Page = styled.div`
   color: #fff;
   min-height: 100dvh;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden;*/
 `;
 
 /* 히어로 */
