@@ -87,7 +87,7 @@ export default function PasswordReset(): React.JSX.Element {
           </S.ResetContainer>
         </S.Background>
       </W.MainContainer>
-      <Footer $isSignUp={false} $isWelcome={false} />
+      <Footer $isSignUp={false} $isWelcome={false} $isMain={false} />
     </>
   );
 }
