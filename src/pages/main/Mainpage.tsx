@@ -4,6 +4,7 @@ import axios from "axios";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import Search from "../Search/Search";
+import Footer from "@/components/Footer/Footer";
 
 /** 공통 미디어 타입 */
 type Media = {
@@ -184,8 +185,8 @@ export default function Home(): React.JSX.Element {
         <S.HeroContent>
           <S.HeroTitle>
             <S.TitleLogo
-              src="https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7"
-              alt="극장판 짱구는 못말려 23기"
+              src='https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7'
+              alt='극장판 짱구는 못말려 23기'
             />
           </S.HeroTitle>
           <S.HeroDesc>
@@ -205,7 +206,7 @@ export default function Home(): React.JSX.Element {
             <S.RowTitle>{row.title}</S.RowTitle>
             <S.SliderWrapper>
               <S.ArrowLeft
-                aria-label="left"
+                aria-label='left'
                 onClick={() => handleScroll(row.id, -600)}
                 style={{ left: 8 }}
               >
@@ -233,7 +234,7 @@ export default function Home(): React.JSX.Element {
                 })}
               </S.Slider>
               <S.ArrowRight
-                aria-label="right"
+                aria-label='right'
                 onClick={() => handleScroll(row.id, 600)}
               >
                 ▶
@@ -243,6 +244,7 @@ export default function Home(): React.JSX.Element {
         ))}
       </S.RowSection>
       <Outlet />
+      <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
     </S.Page>
   );
 }
