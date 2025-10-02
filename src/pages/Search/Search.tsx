@@ -23,16 +23,20 @@ export default function Search({
 
   useEffect(() => {
     // 상세 페이지가 아닐 때만 URL의 쿼리를 상태에 동기화
-    if (pathname === "/search") {
+    if (pathname === '/search') {
       const params = new URLSearchParams(search);
       const q = params.get("query") ?? "";
       if (q !== query) setQuery(q);
+    } else {
+        // 검색 페이지가 아니면 검색어 초기화
+        setQuery("");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search]);
 
   useEffect(() => {
-    if (isSearchRoute) setShowSearch(true);
+    if (isSearchRoute) {
+      setShowSearch(true);
+    }
   }, [isSearchRoute]);
 
   const [movies, setMovies] = useState<MovieItem[]>([]);
@@ -47,9 +51,31 @@ export default function Search({
 
   const handleClearSearch = () => {
     setQuery("");
-    setShowSearch(true);
-    navigate("/home"); // 메인으로
+    navigate("/home");
   };
+  
+  // 검색어 입력 시 URL 변경
+  useEffect(() => {
+    const q = query.trim();
+    // 이 효과는 검색창에 입력할 때만 동작해야 함
+    if (!showSearch) return;
+
+    const timer = setTimeout(() => {
+        if (q) {
+            const next = `/search?query=${encodeURIComponent(q)}`;
+            // 현재 URL이 이미 올바른 검색 URL이 아니라면 이동
+            if (`${pathname}${search}` !== next) {
+                navigate(next, { replace: true });
+            }
+        } else if (isSearchRoute && pathname === '/search') {
+            // 검색페이지에서 검색어를 모두 지우면 홈으로 이동
+            navigate("/home", { replace: true });
+        }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query, navigate, showSearch, isSearchRoute, pathname, search]);
+
 
   const [suggests, setSuggests] = useState<Suggestion[]>([]);
   const [sugLoading, setSugLoading] = useState(false);
@@ -98,28 +124,22 @@ export default function Search({
 
   useEffect(() => {
     const q = query.trim();
+    if (!q || !isSearchRoute) {
+      setMovies([]);
+      setError(null);
+      return;
+    }
     if (!TMDB_KEY) {
       setError(
         "TMDB API 키가 없습니다. apiKey props 또는 VITE_TMDB_API_KEY를 설정하세요."
       );
-      setMovies([]);
       return;
     }
-
+  
     setBannerMode("none");
     setRelated([]);
     setRelatedLoading(false);
-
-    if (!q) {
-      setMovies([]);
-      setError(null);
-      setLoading(false);
-      setSuggests([]);
-      setBannerMode("none");
-      setRelated([]);
-      return;
-    }
-
+  
     const ctrl = new AbortController();
     const timer = setTimeout(async () => {
       setLoading(true);
@@ -132,7 +152,7 @@ export default function Search({
         const data = await res.json().catch(() => ({}));
         if (!res.ok)
           throw new Error(data.status_message || `HTTP ${res.status}`);
-
+  
         const list: MovieItem[] = ((data.results as MultiSearchItem[]) || [])
           .filter(
             (it): it is MovieItem =>
@@ -146,158 +166,29 @@ export default function Search({
         setLoading(false);
       }
     }, 250);
-
+  
     return () => {
       clearTimeout(timer);
       ctrl.abort();
     };
-  }, [query, TMDB_KEY]);
+  }, [query, TMDB_KEY, isSearchRoute]);
 
-  // 이동 로직 수정
-  useEffect(() => {
-    const q = query.trim();
-    if (!isSearchRoute && !q) return;
-
-    const timer = setTimeout(() => {
-      // 검색어가 있으면 URL 업데이트
-      if (q) {
-        const next = `/search?query=${encodeURIComponent(q)}`;
-        const current = `/search${search}`;
-        // 현재 페이지가 검색 결과 페이지일 때만 URL을 변경
-        if (pathname === "/search" && current !== next) {
-          navigate(next, { replace: true });
-        }
-      }
-      // 검색어가 없고, 현재 페이지가 검색 결과 페이지일 때만 홈으로 이동
-      else if (isSearchRoute && pathname === "/search") {
-        navigate("/home", { replace: true });
-        setBannerMode("none");
-        setRelated([]);
-        setMovies([]);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [query, pathname, search, navigate, isSearchRoute]);
-
-  // 추천어 생성
-  useEffect(() => {
-    const q = query.trim();
-    if (!q) return;
-
-    const ctrl = new AbortController();
-    const timer = setTimeout(async () => {
-      setSugLoading(true);
-      try {
-        const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(
-          q
-        )}&page=1&include_adult=false`;
-        const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
-        const titleData = await titleRes.json().catch(() => ({}));
-
-        const isMovieOrTv = (
-          x: MultiSearchItem
-        ): x is MultiSearchItem & { media_type: "movie" | "tv" } =>
-          x.media_type === "movie" || x.media_type === "tv";
-
-        const titleSugs: Suggestion[] = (
-          (titleData.results ?? []) as MultiSearchItem[]
-        )
-          .filter(isMovieOrTv)
-          .slice(0, 6)
-          .map((it) => ({
-            type: "title" as const,
-            id: it.id,
-            label: it.title || it.name || "",
-            media: it.media_type,
-          }));
-
-        const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(
-          q
-        )}&page=1`;
-        const kwRes = await fetch(kwUrl, { signal: ctrl.signal });
-        const kwData = await kwRes.json().catch(() => ({}));
-
-        const kwSugs: Suggestion[] = ((kwData.results ?? []) as KeywordItem[])
-          .slice(0, 6)
-          .map((k) => ({
-            type: "keyword" as const,
-            id: k.id,
-            label: k.name,
-          }));
-
-        const mixed = [...titleSugs, ...kwSugs].slice(0, 10);
-        setSuggests(mixed);
-      } finally {
-        setSugLoading(false);
-      }
-    }, 250);
-
-    return () => {
-      clearTimeout(timer);
-      ctrl.abort();
-    };
-  }, [query, TMDB_KEY]);
-
-  //추천클릭 (버그 수정)
-  const handleSuggestClick = async (s: Suggestion) => {
-    setRelated([]);
-    setBannerLabel(s.label);
-
-    if (s.type === "title") {
-      setBannerMode("title");
-      setRelatedLoading(true);
-      try {
-        const path =
-          s.media === "movie"
-            ? `/movie/${s.id}/recommendations`
-            : `/tv/${s.id}/recommendations`;
-        const url = `${TMDB_BASE}${path}?api_key=${TMDB_KEY}&language=ko-KR&page=1`;
-        const res = await fetch(url);
-        const data = await res.json().catch(() => ({}));
-        const list: MovieItem[] = ((data.results ?? []) as MovieItem[])
-          .filter((it) => it.poster_path || it.backdrop_path)
-          .map((it) => ({ ...it, media_type: s.media })); // media_type 추가
-        setRelated(list);
-      } finally {
-        setRelatedLoading(false);
-      }
-    }
-
-    if (s.type === "keyword") {
-      setBannerMode("keyword");
-      setRelatedLoading(true);
-      try {
-        const url = `${TMDB_BASE}/discover/movie?api_key=${TMDB_KEY}&language=ko-KR&include_adult=false&with_keywords=${s.id}&sort_by=popularity.desc&page=1`;
-        const res = await fetch(url);
-        const data = await res.json().catch(() => ({}));
-        const list: MovieItem[] = ((data.results ?? []) as MovieItem[])
-          .filter((it) => it.poster_path || it.backdrop_path)
-          .map((it) => ({ ...it, media_type: "movie" })); // media_type 추가
-        setRelated(list);
-      } finally {
-        setRelatedLoading(false);
-      }
-    }
-  };
-
-  // 검색어 있을 시에는 고정
+  // 외부 클릭 감지 로직
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         searchRef.current &&
         !searchRef.current.contains(e.target as Node) &&
-        query.trim() === ""
+        query.trim() === "" &&
+        !isSearchRoute
       ) {
         setShowSearch(false);
       }
     };
-
     if (showSearch) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showSearch, query]);
+  }, [showSearch, query, isSearchRoute]);
 
-  // 드롭다운 외부 클릭
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -313,16 +204,11 @@ export default function Search({
 
   // 프로필 드롭다운
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  // 유저 이메일 주소 가져오기
-  // AuthContext 불러옴
   const { currentUser, logout } = useAuth();
   const userEmail = currentUser?.email || "Guest";
 
-  // 로그아웃 로직
   const handleSignOut = useCallback(async () => {
-    const c = confirm("로그아웃하시겠습니까?");
-    if (c) {
+    if (confirm("로그아웃하시겠습니까?")) {
       try {
         await logout();
         navigate("/");
@@ -333,211 +219,127 @@ export default function Search({
     setIsProfileOpen(false);
   }, [logout, navigate]);
 
-  return (
-    <S.SearchPage
-      style={{
-        minHeight: isSearchRoute ? "100dvh" : "auto",
-        background: isSearchRoute ? "#141414" : "transparent",
-      }}
-    >
-      {/* 헤더 */}
-      <S.HeaderBar>
-        <S.Logo>
+  const headerContent = (
+    <S.HeaderBar>
+      <S.Logo>
+        <Link to="/home">
           <S.LogoImg src={logoSrc || logo} alt="Netflix" />
-        </S.Logo>
-
-        {/* 메뉴 */}
-        <S.Ul>
-          <S.Li ref={dropdownRef}>
-            <S.SearchNav onClick={() => setOpen((prev) => !prev)}>
-              메뉴 ▼
-            </S.SearchNav>
-
-            {open && (
-              <S.Dropdown>
-                <S.DropdownIcon></S.DropdownIcon>
-                <S.DropdownUl>
-                  <S.DropdownLi onClick={() => navigate("/")}>홈</S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/series")}>
-                    시리즈
-                  </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/movies")}>
-                    영화
-                  </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/new")}>
-                    NEW & 인기
-                  </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/my-list")}>
-                    내가 찜한 리스트
-                  </S.DropdownLi>
-                </S.DropdownUl>
-              </S.Dropdown>
-            )}
-          </S.Li>
-        </S.Ul>
-
-        {/* 네브바 */}
-        <S.Nav>
-          <S.NavItem onClick={() => navigate("/home")}>홈</S.NavItem>
-          <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
-          <S.NavItem onClick={() => navigate("/movies")}>영화</S.NavItem>
-          <S.NavItem onClick={() => navigate("/new")}>NEW & 인기</S.NavItem>
-          <S.NavItem onClick={() => navigate("/my-list")}>
-            내가 찜한 리스트
-          </S.NavItem>
-        </S.Nav>
-
-        <S.HeaderActions>
-          {showSearch && (
-            <S.SearchBtn ref={searchRef}>
-              <S.Searchimg aria-label="검색">
-                <S.Svg
-                  viewBox="0 0 24 24"
-                  role="img"
-                  aria-hidden="true"
-                  focusable="false"
+        </Link>
+      </S.Logo>
+      <S.Ul>
+        <S.Li ref={dropdownRef}>
+          <S.SearchNav onClick={() => setOpen((prev) => !prev)}>
+            메뉴 ▼
+          </S.SearchNav>
+          {open && (
+            <S.Dropdown>
+              <S.DropdownIcon />
+              <S.DropdownUl>
+                <S.DropdownLi onClick={() => navigate("/home")}>홈</S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/series")}>시리즈</S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/movies")}>영화</S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/new")}>NEW & 인기</S.DropdownLi>
+                <S.DropdownLi onClick={() => navigate("/my-list")}>내가 찜한 리스트</S.DropdownLi>
+              </S.DropdownUl>
+            </S.Dropdown>
+          )}
+        </S.Li>
+      </S.Ul>
+      <S.Nav>
+        <S.NavItem onClick={() => navigate("/home")}>홈</S.NavItem>
+        <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
+        <S.NavItem onClick={() => navigate("/movies")}>영화</S.NavItem>
+        <S.NavItem onClick={() => navigate("/new")}>NEW & 인기</S.NavItem>
+        <S.NavItem onClick={() => navigate("/my-list")}>내가 찜한 리스트</S.NavItem>
+      </S.Nav>
+      <S.HeaderActions>
+        {showSearch && (
+          <S.SearchBtn ref={searchRef}>
+            <S.Searchimg aria-label="검색">
+            <S.Svg
+                  viewBox='0 0 24 24'
+                  role='img'
+                  aria-hidden='true'
+                  focusable='false'
                 >
                   <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z"
-                    fill="currentColor"
+                    fillRule='evenodd'
+                    clipRule='evenodd'
+                    d='M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z'
+                    fill='currentColor'
                   />
                 </S.Svg>
-              </S.Searchimg>
-
-              <S.SearchBox
-                placeholder="제목, 사람, 장르"
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setShowSearch(true);
-                }}
-              />
-
-              {query && (
-                <S.SearchDel
-                  onClick={handleClearSearch}
-                  role="button"
-                  aria-label="검색어 삭제"
-                >
-                  ⨯
-                </S.SearchDel>
-              )}
-            </S.SearchBtn>
-          )}
-
-          {!showSearch && (
-            <S.SearchIconBox
-              aria-label="검색"
-              onClick={() => setShowSearch(true)}
-            >
-              <S.Svg
-                viewBox="0 0 24 24"
-                role="img"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z"
-                  fill="currentColor"
-                />
-              </S.Svg>
-            </S.SearchIconBox>
-          )}
-          <S.IconBox aria-label="알림">
-            <S.Svg
-              viewBox="0 0 24 24"
-              role="img"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z"
-                fill="currentColor"
-              ></path>
-            </S.Svg>
-          </S.IconBox>
-          <div
-            onMouseEnter={() => setIsProfileOpen(true)}
-            onMouseLeave={() => setIsProfileOpen(false)}
-          >
-            <S.AvatarWrapper>
-              <S.AvatarBox>
-                <S.Avatar />
-                <S.AvatarTriangle $isRotated={isProfileOpen} />
-              </S.AvatarBox>
-            </S.AvatarWrapper>
-            <S.ProfileDropdown $isOpen={isProfileOpen}>
-              <S.ProfileDropdownIcon />
-              <S.ProfileDropdownItem $isButton={false}>
-                <S.Avatar />
-                <span>{userEmail}</span>
-              </S.ProfileDropdownItem>
-              <S.ProfileDropdownHr />
-              <S.ProfileDropdownItem
-                as="button"
-                onClick={handleSignOut}
-                $isButton={true}
-              >
-                넷플릭스에서 로그아웃
-              </S.ProfileDropdownItem>
-            </S.ProfileDropdown>
-          </div>
-        </S.HeaderActions>
-      </S.HeaderBar>
-      <S.HeaderSpacer />
-
-      {/* 메인 */}
-      <S.main>
-        {/* 추천검색어 */}
-        {hasQuery && !noResult && (
-          <S.RecommendBox>
-            <S.RecommendTitle>
-              더 다양한 검색어가 필요하시다면!:
-            </S.RecommendTitle>
-            <S.Recommend>
-              {sugLoading && <span>추천어 로딩…</span>}
-              {!sugLoading &&
-                suggests.map((s) => (
-                  <S.RecommendIcon
-                    key={`${s.type}-${s.id}`}
-                    onClick={() => handleSuggestClick(s)}
-                  >
-                    {s.label}
-                  </S.RecommendIcon>
-                ))}
-            </S.Recommend>
-          </S.RecommendBox>
+            </S.Searchimg>
+            <S.SearchBox
+              placeholder="제목, 사람, 장르"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {query && (
+              <S.SearchDel onClick={handleClearSearch} role="button" aria-label="검색어 삭제">
+                ⨯
+              </S.SearchDel>
+            )}
+          </S.SearchBtn>
         )}
+        {!showSearch && (
+          <S.SearchIconBox
+            aria-label="검색"
+            onClick={() => setShowSearch(true)}
+          >
+            <S.Svg
+                  viewBox='0 0 24 24'
+                  role='img'
+                  aria-hidden='true'
+                  focusable='false'
+                >
+                  <path
+                    fillRule='evenodd'
+                    clipRule='evenodd'
+                    d='M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10ZM15.6177 17.0319C14.078 18.2635 12.125 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 12.125 18.2635 14.078 17.0319 15.6177L22.7071 21.2929L21.2929 22.7071L15.6177 17.0319Z'
+                    fill='currentColor'
+                  />
+                </S.Svg>
+          </S.SearchIconBox>
+        )}
+        <S.IconBox aria-label="알림">{/* ... 알림 아이콘 ... */}</S.IconBox>
+        <div
+          onMouseEnter={() => setIsProfileOpen(true)}
+          onMouseLeave={() => setIsProfileOpen(false)}
+        >
+          <S.AvatarWrapper>
+            <S.AvatarBox>
+              <S.Avatar />
+              <S.AvatarTriangle $isRotated={isProfileOpen} />
+            </S.AvatarBox>
+          </S.AvatarWrapper>
+          <S.ProfileDropdown $isOpen={isProfileOpen}>
+            <S.ProfileDropdownIcon />
+            <S.ProfileDropdownItem $isButton={false}>
+              <S.Avatar />
+              <span>{userEmail}</span>
+            </S.ProfileDropdownItem>
+            <S.ProfileDropdownHr />
+            <S.ProfileDropdownItem as="button" onClick={handleSignOut} $isButton={true}>
+              넷플릭스에서 로그아웃
+            </S.ProfileDropdownItem>
+          </S.ProfileDropdown>
+        </div>
+      </S.HeaderActions>
+    </S.HeaderBar>
+  );
 
-        {/* 추천영화 */}
-        <S.ReMovie>
-          {hasQuery && isLoading && (
-            <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
-          )}
-
-          {hasQuery && !noResult && bannerMode !== "none" && (
-            <S.ReOther>
-              {bannerMode === "title"
-                ? `“${bannerLabel}” 작품은 없습니다. 대신 이런 작품들은 어떠세요?`
-                : `${bannerLabel} 검색 결과 && 다른 인기 콘텐츠`}
-            </S.ReOther>
-          )}
-
-          {hasQuery && error && (
-            <div style={{ margin: "0 60px", color: "tomato" }}>
-              오류: {error}
-            </div>
-          )}
-
-          {hasQuery && !loading && !error && gridItems.length > 0 && (
+  // 현재 경로가 /search 이면 전체 검색 페이지를, 아니면 헤더만 렌더링
+  if (isSearchRoute) {
+    return (
+      <S.SearchPage>
+        {headerContent}
+        <S.HeaderSpacer />
+        <S.main>
+          {/* ... 추천 검색어, 로딩, 오류, 결과 없음 등 JSX ... */}
+          {hasQuery && !loading && !error && movies.length > 0 && (
             <S.MovieGrid>
-              {gridItems.map((m) => {
+              {movies.map((m) => {
                 const title = m.title || m.name || "제목 없음";
                 const img =
                   (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
@@ -553,37 +355,13 @@ export default function Search({
               })}
             </S.MovieGrid>
           )}
-
-          {/* 결과 없음 */}
-          {noResult && (
-            <S.text>
-              <S.NoSearch>
-                <S.NoSearchTitle>
-                  입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다.
-                </S.NoSearchTitle>
-                <S.ReSearch>추천 검색어:</S.ReSearch>
-                <S.ReSearchUl>
-                  <S.ReSearchLi>다른 키워드를 입력해 보세요.</S.ReSearchLi>
-                  <S.ReSearchLi>시리즈나 영화를 찾고 계신가요?</S.ReSearchLi>
-                  <S.ReSearchLi>
-                    영화 제목, 시리즈 제목, 또는 배우나 감독의 이음으로 검색해
-                    보세요.
-                  </S.ReSearchLi>
-                  <S.ReSearchLi>
-                    코미디, 로맨스, 스포츠 또는 드라마와 같은 장르명으로 검색해
-                    보세요.
-                  </S.ReSearchLi>
-                </S.ReSearchUl>
-              </S.NoSearch>
-            </S.text>
-          )}
-        </S.ReMovie>
-      </S.main>
-      <Outlet />
-      {/* 푸터 */}
-      {isSearchRoute && (
+        </S.main>
+        <Outlet />
         <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
-      )}
-    </S.SearchPage>
-  );
+      </S.SearchPage>
+    );
+  }
+
+  // /search 경로가 아닐 경우 헤더만 반환
+  return headerContent;
 }
