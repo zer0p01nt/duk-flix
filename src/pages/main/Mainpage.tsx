@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, Outlet } from "react-router-dom"; // Link와 Outlet을 import 합니다.
+import { Link, Outlet } from "react-router-dom";
 import axios from "axios";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
@@ -212,16 +212,48 @@ export default function Home(): React.JSX.Element {
               >
                 ◀
               </S.ArrowLeft>
+
               <S.Slider
-                id={row.id}
-                ref={(el) => {
+                ref={(el: HTMLDivElement | null) => {
                   sliderRefs.current[row.id] = el;
                 }}
               >
-                {row.items.map((it) => {
+                {row.items.map((it, idx) => {
                   const poster = posterURL(it.poster_path, "w342");
+
+                  if (row.id === "r1") {
+                    const detailHref = `/home/${it.media_type}/${it.id}`;
+
+                    return (
+                      <Link
+                        key={`${row.id}-${it.media_type}-${it.id}`}
+                        to={detailHref}
+                        aria-label={`${idx + 1}위: ${it.title} 상세보기`}
+                        style={{ display: "block" }}
+                      >
+                        <S.RankItem>
+                          <S.RankSvg viewBox="0 0 200 200" aria-hidden>
+                            <S.RankText
+                              x="95%"
+                              y="50%"
+                              textAnchor="end"
+                              dominantBaseline="middle"
+                              fontSize="180"
+                              vectorEffect="non-scaling-stroke"
+                            >
+                              {idx + 1}
+                            </S.RankText>
+                          </S.RankSvg>
+
+                          <S.PosterThumb $bg={poster || ""}>
+                            <S.ThumbLabel>{it.title}</S.ThumbLabel>
+                          </S.PosterThumb>
+                        </S.RankItem>
+                      </Link>
+                    );
+                  }
+
                   return (
-                    // 상세페이지 오류 해결 위해 링크 수정
                     <Link
                       key={`${row.id}-${it.media_type}-${it.id}`}
                       to={`/home/${it.media_type}/${it.id}`}
@@ -233,6 +265,7 @@ export default function Home(): React.JSX.Element {
                   );
                 })}
               </S.Slider>
+
               <S.ArrowRight
                 aria-label='right'
                 onClick={() => handleScroll(row.id, 600)}
