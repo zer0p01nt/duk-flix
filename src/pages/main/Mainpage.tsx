@@ -7,49 +7,14 @@ import Search from "../Search/Search";
 import Footer from "@/components/Footer/Footer";
 import { fetchMyListDocs } from "@/util/myList";
 import { useAuth } from "@/hooks/useAuth";
-
-/** 공통 미디어 타입 */
-type Media = {
-  id: number;
-  title?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-  media_type?: "movie" | "tv";
-};
-
-type RowData = {
-  id: string;
-  title: string;
-  items: Media[];
-};
-
-type TMDBMovieRaw = {
-  id: number;
-  title?: string;
-  original_title?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-};
-
-type TMDBTVRaw = {
-  id: number;
-  name?: string;
-  original_name?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-};
-
-type TMDBListResponse<T> = {
-  page: number;
-  results: T[];
-  total_pages: number;
-  total_results: number;
-};
-
-const posterURL = (
-  path: string | null | undefined,
-  size: "w154" | "w342" | "w500" = "w342"
-) => (path ? `https://image.tmdb.org/t/p/${size}${path}` : "");
+import type {
+  Media,
+  RowData,
+  TMDBListResponse,
+  TMDBMovieRaw,
+  TMDBTVRaw,
+} from "@/types/TMDB.type";
+import { mapMovie, mapTV, posterURL } from "@/util/mapMedias";
 
 const takeDistinct = <T extends { id: number }>(
   list: T[],
@@ -65,22 +30,6 @@ const takeDistinct = <T extends { id: number }>(
   }
   return out;
 };
-
-const mapMovie = (m: TMDBMovieRaw): Media => ({
-  id: m.id,
-  title: m.title ?? m.original_title ?? "제목 없음",
-  poster_path: m.poster_path ?? null,
-  backdrop_path: m.backdrop_path ?? null,
-  media_type: "movie",
-});
-
-const mapTV = (t: TMDBTVRaw): Media => ({
-  id: t.id,
-  title: t.name ?? t.original_name ?? "제목 없음",
-  poster_path: t.poster_path ?? null,
-  backdrop_path: t.backdrop_path ?? null,
-  media_type: "tv",
-});
 
 export default function Home(): React.JSX.Element {
   const [topKr, setTopKr] = useState<Media[]>([]);

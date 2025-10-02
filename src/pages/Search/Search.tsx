@@ -4,6 +4,7 @@ import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Footer from "@/components/Footer/Footer";
+import { theme } from "@/styles/theme";
 
 // 컴포넌트
 export default function Search({
@@ -337,12 +338,12 @@ export default function Search({
     <S.SearchPage
       style={{
         minHeight: isSearchRoute ? "100dvh" : "auto",
-        background: isSearchRoute ? "#141414" : "transparent",
+        background: isSearchRoute ? `${theme.color.black}` : "transparent",
       }}
     >
       {/* 헤더 */}
       <S.HeaderBar>
-        <S.Logo>
+        <S.Logo href='/home'>
           <S.LogoImg src={logoSrc || logo} alt='Netflix' />
         </S.Logo>
 
@@ -357,17 +358,34 @@ export default function Search({
               <S.Dropdown>
                 <S.DropdownIcon></S.DropdownIcon>
                 <S.DropdownUl>
-                  <S.DropdownLi onClick={() => navigate("/")}>홈</S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/series")}>
+                  <S.DropdownLi
+                    onClick={() => navigate("/home")}
+                    $isSelected={location.pathname === "/home"}
+                  >
+                    홈
+                  </S.DropdownLi>
+                  <S.DropdownLi
+                    onClick={() => navigate("/series")}
+                    $isSelected={location.pathname === "/series"}
+                  >
                     시리즈
                   </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/movies")}>
+                  <S.DropdownLi
+                    onClick={() => navigate("/movies")}
+                    $isSelected={location.pathname === "/movies"}
+                  >
                     영화
                   </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/new")}>
+                  <S.DropdownLi
+                    onClick={() => navigate("/new")}
+                    $isSelected={location.pathname === "/new"}
+                  >
                     NEW & 인기
                   </S.DropdownLi>
-                  <S.DropdownLi onClick={() => navigate("/my-list")}>
+                  <S.DropdownLi
+                    onClick={() => navigate("/my-list")}
+                    $isSelected={location.pathname === "/my-list"}
+                  >
                     내가 찜한 리스트
                   </S.DropdownLi>
                 </S.DropdownUl>
@@ -378,11 +396,34 @@ export default function Search({
 
         {/* 네브바 */}
         <S.Nav>
-          <S.NavItem onClick={() => navigate("/home")}>홈</S.NavItem>
-          <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
-          <S.NavItem onClick={() => navigate("/movies")}>영화</S.NavItem>
-          <S.NavItem onClick={() => navigate("/new")}>NEW & 인기</S.NavItem>
-          <S.NavItem onClick={() => navigate("/my-list")}>
+          <S.NavItem
+            onClick={() => navigate("/home")}
+            $isSelected={location.pathname === "/home"}
+          >
+            홈
+          </S.NavItem>
+          <S.NavItem
+            onClick={() => navigate("/series")}
+            $isSelected={location.pathname === "/series"}
+          >
+            시리즈
+          </S.NavItem>
+          <S.NavItem
+            onClick={() => navigate("/movies")}
+            $isSelected={location.pathname === "/movies"}
+          >
+            영화
+          </S.NavItem>
+          <S.NavItem
+            onClick={() => navigate("/new")}
+            $isSelected={location.pathname === "/new"}
+          >
+            NEW & 인기
+          </S.NavItem>
+          <S.NavItem
+            onClick={() => navigate("/my-list")}
+            $isSelected={location.pathname === "/my-list"}
+          >
             내가 찜한 리스트
           </S.NavItem>
         </S.Nav>
@@ -597,12 +638,12 @@ export default function Search({
           )}
         </S.ReMovie>
       </S.main>
-            {/* 푸터 */}
-            {isSearchRoute && (
-              <S.FooterBox>
-            <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
-            </S.FooterBox>
-            )}
+      {/* 푸터 */}
+      {isSearchRoute && (
+        <S.FooterBox>
+          <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+        </S.FooterBox>
+      )}
     </S.SearchPage>
   );
 }
