@@ -377,7 +377,7 @@ export default function Search({
 
         {/* 네브바 */}
         <S.Nav>
-          <S.NavItem onClick={() => navigate("/")}>홈</S.NavItem>
+          <S.NavItem onClick={() => navigate("/home")}>홈</S.NavItem>
           <S.NavItem onClick={() => navigate("/series")}>시리즈</S.NavItem>
           <S.NavItem onClick={() => navigate("/movies")}>영화</S.NavItem>
           <S.NavItem onClick={() => navigate("/new")}>NEW & 인기</S.NavItem>
@@ -464,7 +464,6 @@ export default function Search({
               </S.Svg>
             </S.SearchIconBox>
           )}
-
           <S.IconBox aria-label='알림'>
             <S.Svg
               viewBox='0 0 24 24'
