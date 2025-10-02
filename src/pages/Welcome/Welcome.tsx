@@ -1461,7 +1461,7 @@ export default function Welcome(): React.JSX.Element {
           </S.CenterFormWrapper>
         </S.Main>
       </S.MainContainer>
-      <Footer $isSignUp={false} $isWelcome={true} />
+      <Footer $isSignUp={false} $isWelcome={true} $isMain={false} />
     </>
   );
 }

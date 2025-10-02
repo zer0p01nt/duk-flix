@@ -142,7 +142,7 @@ export default function Login(): React.JSX.Element {
           <W.Overlay />
         </S.Background>
       </W.MainContainer>
-      <Footer $isSignUp={false} $isWelcome={false} />
+      <Footer $isSignUp={false} $isWelcome={false} $isMain={false} />
     </>
   );
 }

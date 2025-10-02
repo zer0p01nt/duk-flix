@@ -31,7 +31,9 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
       return;
     }
     if (!TMDB_KEY) {
-      setError("TMDB API 키가 없습니다. apiKey props 또는 VITE_TMDB_API_KEY를 설정하세요.");
+      setError(
+        "TMDB API 키가 없습니다. apiKey props 또는 VITE_TMDB_API_KEY를 설정하세요."
+      );
       setMovies([]);
       return;
     }
@@ -46,7 +48,8 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
         )}&page=1&include_adult=false`;
         const res = await fetch(url, { signal: ctrl.signal });
         const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.status_message || `HTTP ${res.status}`);
+        if (!res.ok)
+          throw new Error(data.status_message || `HTTP ${res.status}`);
 
         const list: MovieItem[] = ((data.results ?? []) as MovieItem[]).filter(
           (it) => it.poster_path || it.backdrop_path
@@ -71,8 +74,12 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
 
   return (
     <S.main>
-      {loading && <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>}
-      {error && <div style={{ margin: "0 60px", color: "tomato" }}>오류: {error}</div>}
+      {loading && (
+        <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
+      )}
+      {error && (
+        <div style={{ margin: "0 60px", color: "tomato" }}>오류: {error}</div>
+      )}
       {noResult && (
         <div style={{ margin: "0 60px" }}>
           입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다.
