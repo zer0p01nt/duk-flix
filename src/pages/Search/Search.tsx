@@ -597,8 +597,10 @@ export default function Search({
           )}
         </S.ReMovie>
       </S.main>
-                  {/* 푸터 */}
+            {/* 푸터 */}
+            {isSearchRoute && (
             <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+            )}
     </S.SearchPage>
   );
 }
