@@ -3,6 +3,7 @@ import * as S from "./searchStyle";
 import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import Footer from "@/components/Footer/Footer";
 
 // 컴포넌트
 export default function Search({
@@ -596,6 +597,8 @@ export default function Search({
           )}
         </S.ReMovie>
       </S.main>
+                  {/* 푸터 */}
+            <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
     </S.SearchPage>
   );
 }

@@ -305,6 +305,12 @@ export const DropdownIcon = styled.div`
 // 메인 공통
 export const main = styled.div`
   margin-top: 30px;
+  /* height: 580px; */
+`;
+
+export const Remain = styled.div`
+  margin-top: 30px;
+  height: 580px;
 `;
 
 // 추천
