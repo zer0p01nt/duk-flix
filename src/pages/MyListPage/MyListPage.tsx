@@ -60,7 +60,7 @@ export default function MyListPage(): React.JSX.Element {
       <S.MainContainer>
         <S.Title>내가 찜한 리스트</S.Title>
         {myListItems.length === 0 ? (
-          <div>찜한 콘텐츠가 없습니다.</div>
+          <S.Empty>아직 찜하신 콘텐츠가 없습니다.</S.Empty>
         ) : (
           <S.Wrapper>
             {myListItems.map((it) => {

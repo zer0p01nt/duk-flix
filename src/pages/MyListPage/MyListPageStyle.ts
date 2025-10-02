@@ -16,8 +16,18 @@ export const MainContainer = styled.div`
 `;
 
 export const Title = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: ${theme.color.white};
+`;
+
+export const Empty = styled.div`
+  color: #666;
+  font-size: 1.125rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
 `;
 
 export const Wrapper = styled.div`
