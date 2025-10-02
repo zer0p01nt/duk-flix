@@ -4,6 +4,7 @@ import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Footer from "@/components/Footer/Footer";
+import { theme } from "@/styles/theme";
 
 // 컴포넌트
 export default function Search({
@@ -337,7 +338,7 @@ export default function Search({
     <S.SearchPage
       style={{
         minHeight: isSearchRoute ? "100dvh" : "auto",
-        background: isSearchRoute ? "#141414" : "transparent",
+        background: isSearchRoute ? `${theme.color.black}` : "transparent",
       }}
     >
       {/* 헤더 */}
@@ -597,12 +598,12 @@ export default function Search({
           )}
         </S.ReMovie>
       </S.main>
-            {/* 푸터 */}
-            {isSearchRoute && (
-              <S.FooterBox>
-            <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
-            </S.FooterBox>
-            )}
+      {/* 푸터 */}
+      {isSearchRoute && (
+        <S.FooterBox>
+          <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+        </S.FooterBox>
+      )}
     </S.SearchPage>
   );
 }

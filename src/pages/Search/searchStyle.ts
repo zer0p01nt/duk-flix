@@ -6,7 +6,7 @@ import { theme } from "@/styles/theme";
 export const SearchPage = styled.div`
   color: #fff;
   min-height: 100dvh;
-  background-color: #141414;
+  background-color: ${theme.color.black};
   width: 100%;
   overflow-x: hidden;
   display: flex;
@@ -304,14 +304,13 @@ export const main = styled.div`
 
 export const Remain = styled.div`
   min-height: calc(100dvh - 82px);
-display: flex;
+  display: flex;
   flex-direction: column;
 `;
 
 export const FooterBox = styled.div`
   margin-top: auto;
 `;
-
 
 // 추천
 export const RecommendBox = styled.div`
