@@ -1,17 +1,29 @@
 // src/SearchResults.tsx
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import * as S from "./searchStyle";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer/Footer";
 
 
+// type MovieItem = {
+//   id: number;
+//   title?: string;
+//   name?: string;
+//   poster_path: string | null;
+//   backdrop_path?: string | null;
+// };
+
+
+// type 보강
 type MovieItem = {
   id: number;
   title?: string;
   name?: string;
   poster_path: string | null;
   backdrop_path?: string | null;
+  media_type?: "movie" | "tv" | "person";
 };
+
 
 export default function SearchResults({ apiKey }: { apiKey?: string }) {
   const [params] = useSearchParams();
@@ -90,7 +102,7 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
 
       {!loading && !error && movies.length > 0 && (
         <S.MovieGrid>
-          {movies.map((m) => {
+          {/* {movies.map((m) => {
             const title = m.title || m.name || "제목 없음";
             const img =
               (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
@@ -101,7 +113,29 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
                 <S.Poster src={img} alt={title} title={title} />
               </S.Movie>
             );
-          })}
+          })} */}
+          {movies.map((m) => {
+  const type = m.media_type;
+  const title = m.title || m.name || "제목 없음";
+  const img =
+    (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
+    (m.backdrop_path && `${TMDB_IMG}${m.backdrop_path}`) ||
+    "";
+
+  const card = <S.Poster src={img} alt={title} title={title} />;
+
+  const isPlayable = type === "movie" || type === "tv";
+
+  return (
+    <S.Movie key={`${type ?? "unknown"}-${m.id}`}>
+      {isPlayable ? (
+        <Link to={`/home/${type}/${m.id}`}>{card}</Link>
+      ) : (
+        card // person 등은 링크 없이 표시
+      )}
+    </S.Movie>
+  );
+})}
         </S.MovieGrid>
       )}
             {/* 푸터 */}
