@@ -1,17 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, Outlet } from "react-router-dom"; // Link와 Outlet을 import 합니다.
 import axios from "axios";
 import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import Search from "../Search/Search";
 
-/** 공통 미디어 타입 */
+/** 렌더에 쓰는 공통 미디어 타입 */
 type Media = {
   id: number;
-  title?: string;
-  poster_path?: string | null;
+  title: string;
+  poster_path: string | null;
   backdrop_path?: string | null;
-  media_type?: "movie" | "tv";
+  media_type: "movie" | "tv";
 };
 
 type RowData = {
@@ -20,6 +19,7 @@ type RowData = {
   items: Media[];
 };
 
+/** TMDB 원본 타입 */
 type TMDBMovieRaw = {
   id: number;
   title?: string;
@@ -43,11 +43,13 @@ type TMDBListResponse<T> = {
   total_results: number;
 };
 
+/** 이미지 URL 헬퍼 */
 const posterURL = (
-  path: string | null | undefined,
+  path: string | null,
   size: "w154" | "w342" | "w500" = "w342"
 ) => (path ? `https://image.tmdb.org/t/p/${size}${path}` : "");
 
+/** 중복 제거 */
 const takeDistinct = <T extends { id: number }>(
   list: T[],
   count: number,
@@ -63,6 +65,7 @@ const takeDistinct = <T extends { id: number }>(
   return out;
 };
 
+/** 매핑 */
 const mapMovie = (m: TMDBMovieRaw): Media => ({
   id: m.id,
   title: m.title ?? m.original_title ?? "제목 없음",
@@ -70,7 +73,7 @@ const mapMovie = (m: TMDBMovieRaw): Media => ({
   backdrop_path: m.backdrop_path ?? null,
   media_type: "movie",
 });
-
+        
 const mapTV = (t: TMDBTVRaw): Media => ({
   id: t.id,
   title: t.name ?? t.original_name ?? "제목 없음",
@@ -98,6 +101,7 @@ export default function Home(): React.JSX.Element {
 
     (async () => {
       try {
+        // 오늘 한국 Top 후보
         const [discMovieRes, discTVRes] = await Promise.all([
           api.get<TMDBListResponse<TMDBMovieRaw>>("/discover/movie", {
             params: {
@@ -116,12 +120,14 @@ export default function Home(): React.JSX.Element {
         const discMovies = discMovieRes.data.results.map(mapMovie);
         const discTVs = discTVRes.data.results.map(mapTV);
 
+        // 시청 중 → 현재 상영작
         const nowPlayingRes = await api.get<TMDBListResponse<TMDBMovieRaw>>(
           "/movie/now_playing",
           { params: { region: "KR" } }
         );
         const nowPlaying = nowPlayingRes.data.results.map(mapMovie);
 
+        // 인기 영화 / 인기 시리즈
         const [moviePopularRes, tvPopularRes] = await Promise.all([
           api.get<TMDBListResponse<TMDBMovieRaw>>("/movie/popular", {
             params: { region: "KR" },
@@ -131,8 +137,10 @@ export default function Home(): React.JSX.Element {
         const movies = moviePopularRes.data.results.map(mapMovie);
         const tvs = tvPopularRes.data.results.map(mapTV);
 
+        // 중복 제거하며 섹션 구성
         const banned = new Set<number>();
 
+        // 오늘 한국 Top 10
         const mixedKR: Media[] = [];
         let i = 0;
         while (mixedKR.length < 10 && (discMovies[i] || discTVs[i])) {
@@ -143,7 +151,7 @@ export default function Home(): React.JSX.Element {
         }
         const topKRList = takeDistinct(mixedKR, 10, banned);
 
-        const watchingList = takeDistinct(nowPlaying, 8, banned); // 시청 중(임시)
+        const watchingList = takeDistinct(nowPlaying, 8, banned);
         const popularMovieList = takeDistinct(movies, 18, banned);
         const popularTVList = takeDistinct(tvs, 18, banned);
 
@@ -178,6 +186,8 @@ export default function Home(): React.JSX.Element {
   return (
     <S.Page>
       <Search />
+
+      {/* 히어로 */}
       <S.Hero>
         <S.HeroBackdrop bg={mainbackground} />
         <S.HeroGradient />
@@ -185,7 +195,7 @@ export default function Home(): React.JSX.Element {
           <S.HeroTitle>
             <S.TitleLogo
               src="https://occ-0-8143-64.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABVuCD_FbNAHQG_w13eIIiTGmrkrCAFty8dPsgJuKfih5Flj8QDPYeoWK5rc-DOiclyt2FdC9FYG8M3YxwS3sENYjUCZTTtx7XkD0QdZMZN2n.webp?r=0d7"
-              alt="극장판 짱구는 못말려 23기"
+              alt="극장판 짱구"
             />
           </S.HeroTitle>
           <S.HeroDesc>
@@ -199,6 +209,8 @@ export default function Home(): React.JSX.Element {
           </S.BtnRow>
         </S.HeroContent>
       </S.Hero>
+
+      {/* 섹션 */}
       <S.RowSection>
         {rows.map((row) => (
           <S.Row key={row.id}>
@@ -207,31 +219,53 @@ export default function Home(): React.JSX.Element {
               <S.ArrowLeft
                 aria-label="left"
                 onClick={() => handleScroll(row.id, -600)}
-                style={{ left: 8 }}
               >
                 ◀
               </S.ArrowLeft>
+
               <S.Slider
-                id={row.id}
-                ref={(el) => {
+                ref={(el: HTMLDivElement | null) => {
                   sliderRefs.current[row.id] = el;
                 }}
               >
-                {row.items.map((it) => {
+                {row.items.map((it, idx) => {
                   const poster = posterURL(it.poster_path, "w342");
+
+                  if (row.id === "r1") {
+                    return (
+                      <S.RankItem key={`${row.id}-${it.id}`}>
+                        <S.RankSvg viewBox="0 0 200 200" aria-hidden>
+                          <S.RankText
+                            x="95%"
+                            y="50%"
+                            textAnchor="end"
+                            dominantBaseline="middle"
+                            fontSize="180"
+                            vectorEffect="non-scaling-stroke"
+                          >
+                            {idx + 1}
+                          </S.RankText>
+                        </S.RankSvg>
+
+                        <S.PosterThumb $bg={poster || ""}>
+                          <S.ThumbLabel>{it.title}</S.ThumbLabel>
+                        </S.PosterThumb>
+                      </S.RankItem>
+                    );
+                  }
+
                   return (
-                    // 상세페이지 오류 해결 위해 링크 수정
-                    <Link
-                      key={`${row.id}-${it.media_type}-${it.id}`}
-                      to={`/home/${it.media_type}/${it.id}`}
+                    <S.Thumb
+                      key={`${row.id}-${it.id}`}
+                      $bg={poster || ""}
+                      title={it.title}
                     >
-                      <S.Thumb $bg={poster || ""} title={it.title}>
-                        <S.ThumbLabel>{it.title}</S.ThumbLabel>
-                      </S.Thumb>
-                    </Link>
+                      <S.ThumbLabel>{it.title}</S.ThumbLabel>
+                    </S.Thumb>
                   );
                 })}
               </S.Slider>
+
               <S.ArrowRight
                 aria-label="right"
                 onClick={() => handleScroll(row.id, 600)}
@@ -242,7 +276,6 @@ export default function Home(): React.JSX.Element {
           </S.Row>
         ))}
       </S.RowSection>
-      <Outlet />
     </S.Page>
   );
 }
