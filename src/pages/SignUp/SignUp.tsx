@@ -164,7 +164,7 @@ export default function SignUp(): React.JSX.Element {
           </S.Form>
         </S.SignUpContainer>
       </S.MainContainer>
-      <Footer $isSignUp={true} $isWelcome={false} />
+      <Footer $isSignUp={true} $isWelcome={false} $isMain={false} />
     </>
   );
 }
