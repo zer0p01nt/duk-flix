@@ -27,6 +27,7 @@ type TMDBMovieRaw = {
   poster_path?: string | null;
   backdrop_path?: string | null;
 };
+
 type TMDBTVRaw = {
   id: number;
   name?: string;
@@ -34,6 +35,7 @@ type TMDBTVRaw = {
   poster_path?: string | null;
   backdrop_path?: string | null;
 };
+
 type TMDBListResponse<T> = {
   page: number;
   results: T[];
@@ -71,6 +73,7 @@ const mapMovie = (m: TMDBMovieRaw): Media => ({
   backdrop_path: m.backdrop_path ?? null,
   media_type: "movie",
 });
+        
 const mapTV = (t: TMDBTVRaw): Media => ({
   id: t.id,
   title: t.name ?? t.original_name ?? "제목 없음",

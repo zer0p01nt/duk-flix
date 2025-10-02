@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import background from "@/assets/welcome-background.jpg";
 import { theme } from "@/styles/theme";
+import { media } from "@/styles/media";
 
 export const Background = styled.div`
   width: 100%;
@@ -8,7 +9,6 @@ export const Background = styled.div`
   min-height: 31rem;
   background-image: url(${background});
   background-size: cover;
-  padding: 0 1rem;
   position: relative;
   display: flex;
   align-items: center;
@@ -121,6 +121,9 @@ export const ToSignUpBox = styled.div`
   display: flex;
   gap: 5px;
   align-self: flex-start;
+  ${media.mobile`
+      flex-direction: column;
+  `}
 `;
 
 export const ToSignUpText = styled.div`

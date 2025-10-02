@@ -1,8 +1,4 @@
-import { auth } from "@/lib/firebase";
 import { validateAll, validateEmail, validatePassword } from "@/util/validate";
-import { useMutation } from "@tanstack/react-query";
-import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as W from "@/pages/Welcome/WelcomeStyle";
@@ -10,50 +6,7 @@ import * as S from "./LoginStyle";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
 import Footer from "@/components/Footer/Footer";
-
-// firebase 로그인 함수
-const signInWithEmail = async (account: {
-  email: string;
-  password: string;
-}) => {
-  try {
-    const credential = await signInWithEmailAndPassword(
-      auth,
-      account.email,
-      account.password
-    );
-    return credential.user;
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      // 계정이 없을 때
-      if (error.code === "auth/user-not-found") {
-        throw new Error("이 이메일 주소를 사용하는 계정을 찾을 수 없습니다.");
-      }
-      // 계정과 비밀번호가 일치하지 않을 때
-      if (error.code === "auth/invalid-credential") {
-        throw new Error("이메일 주소 또는 비밀번호가 올바르지 않습니다.");
-      }
-    }
-    throw new Error("로그인 중 오류가 발생했습니다.");
-  }
-};
-
-// Tanstack Query 훅
-const useLogin = (
-  navigate: ReturnType<typeof useNavigate>,
-  setError: (message: string) => void
-) => {
-  return useMutation({
-    mutationFn: signInWithEmail,
-    onSuccess: () => {
-      setError("");
-      navigate("/home");
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
-};
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login(): React.JSX.Element {
   const navigate = useNavigate();
@@ -61,20 +14,37 @@ export default function Login(): React.JSX.Element {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // 유효성 검사 결과 저장
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const { mutate, isPending } = useLogin(navigate, setErrorMsg);
+  // AuthContext 불러옴
+  const { login } = useAuth();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateAll(email, password, setEmailError, setPasswordError)) {
       return;
     }
-    mutate({ email, password });
+
+    setErrorMsg("");
+    setIsLoading(true);
+    try {
+      await login(email, password);
+      // 로그인하면 뒤로가기 눌러도 로그인 안 풀리게
+      navigate("/home", { replace: true });
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMsg(error.message);
+      } else {
+        setErrorMsg("알 수 없는 오류가 발생했습니다.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -94,7 +64,7 @@ export default function Login(): React.JSX.Element {
                   setEmail={setEmail}
                   validateEmail={validateEmail}
                   setEmailError={setEmailError}
-                  isPending={isPending}
+                  isPending={isLoading}
                   $isBorderRed={!!emailError}
                   $isLogin={true}
                 />
@@ -129,7 +99,7 @@ export default function Login(): React.JSX.Element {
                   setPassword={setPassword}
                   validatePassword={validatePassword}
                   setPasswordError={setPasswordError}
-                  isPending={isPending}
+                  isPending={isLoading}
                   $isBorderRed={!!passwordError}
                   $isLogin={true}
                 />
