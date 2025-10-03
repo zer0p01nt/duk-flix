@@ -12,19 +12,59 @@ npm run dev
 
 ## 개발 관련 참고사항
 - 브랜치 운영 방식 : `main <- feat`
-- 브랜치명은 `feat/login` 같은 방식으로 하든, 그냥 `백민영` 이런 방식으로 하든 일단은 상관 없음
-- 커밋 메세지도 편하게 하되, 아래 컨벤션 참고해서 커밋해도 좋을 듯!
-- PR 보낼 때 최소 한 명은 리뷰하도록 할지, 스스로 머지하도록 할지 -> 정하면 좋을 듯
-- 이슈 기능은 자유롭게 쓰기
-- PR 템플릿 최대한 맞춰서 쓰기 (자동으로 안 뜨면 알려주세요!)
-- 전역 css 파일의 `:root` 변수처럼 추가할 게 있다면 `src/styles/theme.ts` 파일에 추가하기!
 
 
 ## 역할 분담
-- 고권혜 : 상세 페이지
-- 양서윤 : 메인 페이지
-- 백민영 : 첫 화면, 로그인 페이지
-- 이소라 : 검색 페이지, 헤더 컴포넌트
+<table>
+  <thead>
+    <tr>
+      <th>
+        <a href="https://github.com/gogogo386">
+          <img src="https://avatars.githubusercontent.com/u/165040142?v=4" width="200" />
+        </a>
+      </th>
+            <th>
+        <a href="https://github.com/yangyangeeee">
+          <img src="https://avatars.githubusercontent.com/u/156039054?v=4" width="200" />
+        </a>
+      </th>
+      <th>
+        <a href="https://github.com/zer0p01nt">
+          <img src="https://avatars.githubusercontent.com/u/189887138?v=4" width="200" />
+        </a>
+      </th>
+            <th>
+        <a href="https://github.com/2godong">
+          <img src="https://avatars.githubusercontent.com/u/203046560?v=4" width="200" />
+        </a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">고권혜</td>
+      <td align="center">양서윤</td>
+      <td align="center">백민영</td>
+      <td align="center">이소라</td>
+    </tr>
+    <tr>
+      <td align="center">
+        <div>상세 페이지</div>
+</td>
+      <td align="center">
+        <div>메인 페이지</div>
+</td>
+      <td align="center">
+        <div>로그인, 회원가입, 첫화면</div>
+        <div>배포 및 CI/CD</div>
+      </td>
+      <td align="center">
+        <div>검색 페이지</div>
+        <div>헤더 컴포넌트</div>
+</td>
+    </tr>
+  </tbody>
+</table>
 
 
 ---
