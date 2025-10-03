@@ -15,6 +15,7 @@ import PasswordReset from "./pages/PasswordReset/PasswordReset";
 import DetailPage from "./pages/DetailPage/DetailPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import MyListPage from "./pages/MyListPage/MyListPage";
 
 const qc = new QueryClient();
 
@@ -40,6 +41,9 @@ function App(): React.JSX.Element {
               {/* 상세페이지 검색 페이지에 중첩 될 수 잇도록 변경*/}
               <Route path="/search" element={<Search />}>
                 <Route path=":mediaType/:mediaId" element={<DetailPage />} />
+              </Route>
+              <Route path='/my-list' element={<MyListPage />}>
+                <Route path=':mediaType/:mediaId' element={<DetailPage />} />
               </Route>
             </Route>
           </Routes>

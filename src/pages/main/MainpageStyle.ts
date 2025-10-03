@@ -1,8 +1,9 @@
+import { theme } from "@/styles/theme";
 import styled from "styled-components";
 
 // 페이지
 export const Page = styled.div`
-  background: #141414;
+  background: ${theme.color.black};
 `;
 
 export const Svg = styled.svg`

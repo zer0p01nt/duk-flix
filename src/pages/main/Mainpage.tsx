@@ -5,54 +5,22 @@ import * as S from "./MainpageStyle";
 import mainbackground from "@/assets/main-background.webp";
 import Search from "../Search/Search";
 import Footer from "@/components/Footer/Footer";
+import { fetchMyListDocs } from "@/util/myList";
+import { useAuth } from "@/hooks/useAuth";
+import type {
+  Media,
+  RowData,
+  TMDBListResponse,
+  TMDBMovieRaw,
+  TMDBTVRaw,
+} from "@/types/TMDB.type";
+import { mapMovie, mapTV, posterURL } from "@/util/mapMedias";
 import { useQuery } from "@tanstack/react-query";
 import YouTube from "react-youtube";
-import { IconVolume, IconVolumeMuted } from "@/components/icons/Icons";
+import { IconVolume, IconVolumeMuted } from "@/components/Icons/Icons";
 
-/** 공통 미디어 타입 */
-type Media = {
-  id: number;
-  title?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-  media_type?: "movie" | "tv";
-};
-
-type RowData = {
-  id: string;
-  title: string;
-  items: Media[];
-};
-
-type TMDBMovieRaw = {
-  id: number;
-  title?: string;
-  original_title?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-};
-
-type TMDBTVRaw = {
-  id: number;
-  name?: string;
-  original_name?: string;
-  poster_path?: string | null;
-  backdrop_path?: string | null;
-};
-
-type TMDBListResponse<T> = {
-  page: number;
-  results: T[];
-  total_pages: number;
-  total_results: number;
-};
-
+// --- 타입 및 헬퍼 함수  ---
 type VideoInfo = { key?: string };
-
-const posterURL = (
-  path: string | null | undefined,
-  size: "w154" | "w342" | "w500" = "w342"
-) => (path ? `https://image.tmdb.org/t/p/${size}${path}` : "");
 
 const takeDistinct = <T extends { id: number }>(
   list: T[],
@@ -68,22 +36,6 @@ const takeDistinct = <T extends { id: number }>(
   }
   return out;
 };
-
-const mapMovie = (m: TMDBMovieRaw): Media => ({
-  id: m.id,
-  title: m.title ?? m.original_title ?? "제목 없음",
-  poster_path: m.poster_path ?? null,
-  backdrop_path: m.backdrop_path ?? null,
-  media_type: "movie",
-});
-
-const mapTV = (t: TMDBTVRaw): Media => ({
-  id: t.id,
-  title: t.name ?? t.original_name ?? "제목 없음",
-  poster_path: t.poster_path ?? null,
-  backdrop_path: t.backdrop_path ?? null,
-  media_type: "tv",
-});
 
 const fetchVideos = async (
   mediaType: string,
@@ -102,29 +54,35 @@ const fetchVideos = async (
   );
   return trailer ? { key: trailer.key } : {};
 };
+// ------------------------------------
 
 export default function Home(): React.JSX.Element {
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
   const [topKr, setTopKr] = useState<Media[]>([]);
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
   const [popularTV, setPopularTV] = useState<Media[]>([]);
-  const [myList] = useState<Media[]>([]);
+  const [myList, setMyList] = useState<Media[]>([]);
   const [watching, setWatching] = useState<Media[]>([]);
   const sliderRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // --- 비디오 플레이어 관련 상태 ---
   const [isHovering, setIsHovering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const playerRef = useRef<any>(null);
 
-  
-  const jjangguMovieId = 371236;
+  // --- 사용자 정보 가져오기 ---
+  const { currentUser } = useAuth();
+  const userId = currentUser?.uid;
 
+  // --- 짱구 비디오 정보 가져오기 ---
+  const jjangguMovieId = 371236;
   const { data: videoInfo } = useQuery({
     queryKey: ["videos", "movie", jjangguMovieId],
     queryFn: () => fetchVideos("movie", jjangguMovieId.toString()),
-    enabled: !!jjangguMovieId,
   });
   const trailerKey = videoInfo?.key;
 
+  // --- 영화/TV 목록 데이터 가져오기 ---
   useEffect(() => {
     const api = axios.create({
       baseURL: "https://api.themoviedb.org/3",
@@ -169,6 +127,28 @@ export default function Home(): React.JSX.Element {
         const movies = moviePopularRes.data.results.map(mapMovie);
         const tvs = tvPopularRes.data.results.map(mapTV);
 
+        // 내가 찜한 리스트 불러오는 로직 추가
+        if (userId) {
+          const myListDocs = await fetchMyListDocs(userId);
+          const myListItemPromises = myListDocs.map((item) =>
+            api
+              .get<TMDBMovieRaw | TMDBTVRaw>(`/${item.media_type}/${item.id}`)
+              .then((res) => {
+                return item.media_type === "movie"
+                  ? mapMovie(res.data as TMDBMovieRaw)
+                  : mapTV(res.data as TMDBTVRaw);
+              })
+              .catch((error) => {
+                console.error(error);
+                return null;
+              })
+          );
+          const myListItems = (await Promise.all(myListItemPromises)).filter(
+            (item): item is Media => item !== null
+          );
+          setMyList(myListItems);
+        }
+
         const banned = new Set<number>();
 
         const mixedKR: Media[] = [];
@@ -180,8 +160,7 @@ export default function Home(): React.JSX.Element {
           i++;
         }
         const topKRList = takeDistinct(mixedKR, 10, banned);
-
-        const watchingList = takeDistinct(nowPlaying, 8, banned); // 시청 중(임시)
+        const watchingList = takeDistinct(nowPlaying, 8, banned);
         const popularMovieList = takeDistinct(movies, 18, banned);
         const popularTVList = takeDistinct(tvs, 18, banned);
 
@@ -193,7 +172,7 @@ export default function Home(): React.JSX.Element {
         console.error("TMDB 로딩 에러:", err);
       }
     })();
-  }, []);
+  }, [userId]); // myList를 의존성 배열에서 제거하여 무한 루프 방지
 
   const rows: RowData[] = useMemo(
     () => [
@@ -239,7 +218,7 @@ export default function Home(): React.JSX.Element {
               height: "100%",
               playerVars: {
                 autoplay: 1,
-                mute: 1,
+                mute: isMuted ? 1 : 0,
                 controls: 0,
                 loop: 1,
                 playlist: trailerKey,
@@ -247,11 +226,7 @@ export default function Home(): React.JSX.Element {
             }}
             onReady={(event) => {
               playerRef.current = event.target;
-              if (isMuted) {
-                event.target.mute();
-              } else {
-                event.target.unMute();
-              }
+              if (isMuted) event.target.mute();
             }}
             style={{
               position: "absolute",
@@ -265,6 +240,7 @@ export default function Home(): React.JSX.Element {
         ) : (
           <S.HeroBackdrop $bg={mainbackground} />
         )}
+
         <S.HeroGradient />
         <S.HeroContent>
           <S.HeroTitle>
@@ -292,9 +268,11 @@ export default function Home(): React.JSX.Element {
             </S.InfoBtn>
           </S.BtnRow>
         </S.HeroContent>
-        <S.VolumeControl onClick={handleVolumeToggle}>
-          {isMuted ? <IconVolumeMuted /> : <IconVolume />}
-        </S.VolumeControl>
+        {isHovering && trailerKey && (
+          <S.VolumeControl onClick={handleVolumeToggle}>
+            {isMuted ? <IconVolumeMuted /> : <IconVolume />}
+          </S.VolumeControl>
+        )}
       </S.Hero>
       <S.RowSection>
         {rows.map((row) => (
@@ -308,7 +286,6 @@ export default function Home(): React.JSX.Element {
               >
                 ◀
               </S.ArrowLeft>
-
               <S.Slider
                 ref={(el: HTMLDivElement | null) => {
                   sliderRefs.current[row.id] = el;
@@ -316,10 +293,8 @@ export default function Home(): React.JSX.Element {
               >
                 {row.items.map((it, idx) => {
                   const poster = posterURL(it.poster_path, "w342");
-
                   if (row.id === "r1") {
                     const detailHref = `/home/${it.media_type}/${it.id}`;
-
                     return (
                       <Link
                         key={`${row.id}-${it.media_type}-${it.id}`}
@@ -340,7 +315,6 @@ export default function Home(): React.JSX.Element {
                               {idx + 1}
                             </S.RankText>
                           </S.RankSvg>
-
                           <S.PosterThumb $bg={poster || ""}>
                             <S.ThumbLabel>{it.title}</S.ThumbLabel>
                           </S.PosterThumb>
@@ -348,7 +322,6 @@ export default function Home(): React.JSX.Element {
                       </Link>
                     );
                   }
-
                   return (
                     <Link
                       key={`${row.id}-${it.media_type}-${it.id}`}
@@ -361,7 +334,6 @@ export default function Home(): React.JSX.Element {
                   );
                 })}
               </S.Slider>
-
               <S.ArrowRight
                 aria-label="right"
                 onClick={() => handleScroll(row.id, 600)}

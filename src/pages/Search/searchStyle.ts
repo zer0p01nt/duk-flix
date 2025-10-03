@@ -6,32 +6,26 @@ import { theme } from "@/styles/theme";
 export const SearchPage = styled.div`
   color: #fff;
   min-height: 100dvh;
-  /* display: contents; */
-  background-color: #141414;
+  background-color: ${theme.color.black};
   width: 100%;
   overflow-x: hidden;
-  /* display: none; */
+  display: flex;
+  flex-direction: column;
 `;
 
 /* 헤더 */
 export const HeaderSpacer = styled.div`
-  height: 50px; /* 50 + 16*2 */
+  height: 32px;
 `;
 
 export const HeaderBar = styled.header`
-  /* position: sticky;
-  width: 100%;
-  height: 50px;
-  top: 0;
-  z-index: 50; */
-  /* position: fixed; */
-  position: fixed; /* ✅ 항상 상단 고정 */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
   width: 100%;
-  height: 50px; /* 실제 높이: 50 + padding(16*2) = 82px */
+  height: 50px;
   box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -41,7 +35,7 @@ export const HeaderBar = styled.header`
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
 `;
 
-export const Logo = styled.div`
+export const Logo = styled.a`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -69,7 +63,7 @@ export const Nav = styled.nav`
   }
 `;
 
-export const NavItem = styled.button`
+export const NavItem = styled.button<{ $isSelected: boolean }>`
   background: none;
   border: 0;
   color: #fff;
@@ -80,6 +74,7 @@ export const NavItem = styled.button`
     opacity: 0.7;
   }
   font-size: clamp(8px, 1.3vw, 14px);
+  font-weight: ${({ $isSelected }) => $isSelected && "600"};
 `;
 
 export const HeaderActions = styled.div`
@@ -283,11 +278,12 @@ export const Li = styled.li`
   unicode-bidi: isolate;
 `;
 export const DropdownUl = styled.ul``;
-export const DropdownLi = styled.li`
+export const DropdownLi = styled.li<{ $isSelected: boolean }>`
   padding: 15px 0;
   &:hover {
     background-color: rgba(71, 71, 71, 0.17);
   }
+  font-weight: ${({ $isSelected }) => $isSelected && "600"};
 `;
 
 export const DropdownIcon = styled.div`
@@ -305,6 +301,17 @@ export const DropdownIcon = styled.div`
 // 메인 공통
 export const main = styled.div`
   margin-top: 30px;
+  /* height: 580px; */
+`;
+
+export const Remain = styled.div`
+  min-height: calc(100dvh - 82px);
+  display: flex;
+  flex-direction: column;
+`;
+
+export const FooterBox = styled.div`
+  margin-top: auto;
 `;
 
 // 추천

@@ -1,15 +1,29 @@
 // src/SearchResults.tsx
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams} from "react-router-dom";
 import * as S from "./searchStyle";
 import { useEffect, useState } from "react";
+import Footer from "@/components/Footer/Footer";
 
+
+// type MovieItem = {
+//   id: number;
+//   title?: string;
+//   name?: string;
+//   poster_path: string | null;
+//   backdrop_path?: string | null;
+// };
+
+
+// type 보강
 type MovieItem = {
   id: number;
   title?: string;
   name?: string;
   poster_path: string | null;
   backdrop_path?: string | null;
+  media_type?: "movie" | "tv" | "person";
 };
+
 
 export default function SearchResults({ apiKey }: { apiKey?: string }) {
   const [params] = useSearchParams();
@@ -73,7 +87,7 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
   const noResult = hasQuery && !loading && !error && movies.length === 0;
 
   return (
-    <S.main>
+    <S.Remain>
       {loading && (
         <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
       )}
@@ -102,6 +116,11 @@ export default function SearchResults({ apiKey }: { apiKey?: string }) {
           })}
         </S.MovieGrid>
       )}
-    </S.main>
+            {/* 푸터 */}
+            <S.FooterBox
+            >
+      <Footer $isSignUp={false} $isWelcome={false} $isMain={true} />
+      </S.FooterBox>
+    </S.Remain>
   );
 }
