@@ -4,7 +4,6 @@ import logo from "@/assets/Netflix_Logo_RGB.png";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import Footer from "@/components/Footer/Footer";
-import { theme } from "@/styles/theme";
 
 // --- 타입 정의 ---
 type MovieItem = {
@@ -15,18 +14,14 @@ type MovieItem = {
   backdrop_path?: string | null;
   media_type: "movie" | "tv";
 };
-type Suggestion =
-  | { type: "title"; id: number; label: string; media: "movie" | "tv" }
-  | { type: "keyword"; id: number; label: string };
+
 type MultiSearchItem = {
   id: number;
   title?: string;
   name?: string;
   media_type: "movie" | "tv" | "person";
-};
-type KeywordItem = {
-  id: number;
-  name: string;
+  poster_path?: string | null; // 배포 오류 해결
+  backdrop_path?: string | null; // 배포 오류 해결
 };
 // ----------------
 
@@ -36,9 +31,8 @@ export default function Search({
 }: { apiKey?: string; logoSrc?: string } = {}): React.JSX.Element {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const [query, setQuery] = useState(() => {
-    // 페이지 로드 시 URL에서 검색어 가져오기
     const params = new URLSearchParams(location.search);
     return params.get("query") ?? "";
   });
@@ -48,15 +42,18 @@ export default function Search({
   const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 
   const isSearchRoute = location.pathname.startsWith("/search");
-  
+
   const [movies, setMovies] = useState<MovieItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [showSearch, setShowSearch] = useState(isSearchRoute);
   const searchRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
+
+  const hasQuery = query.trim() !== "";
+  const noResult = hasQuery && !loading && !error && movies.length === 0;
 
   const handleClearSearch = () => {
     setQuery("");
@@ -66,7 +63,6 @@ export default function Search({
   // 검색어 입력 시 URL 실시간 변경
   useEffect(() => {
     const q = query.trim();
-    // 상세 페이지 경로가 아닐 때만 URL 변경 로직을 실행
     if (showSearch && !location.pathname.includes("/search/")) {
       const timer = setTimeout(() => {
         if (q) {
@@ -107,7 +103,7 @@ export default function Search({
       .then(data => {
         const list: MovieItem[] = ((data.results as MultiSearchItem[]) || [])
           .filter((it): it is MovieItem => 
-            (it.media_type === 'movie' || it.media_type === 'tv') && (it.poster_path || it.backdrop_path)
+            (it.media_type === 'movie' || it.media_type === 'tv') && !!(it.poster_path || it.backdrop_path)
           );
         setMovies(list);
       })
@@ -118,53 +114,8 @@ export default function Search({
 
     return () => ctrl.abort();
   }, [location.search, isSearchRoute, TMDB_KEY]);
-  
-  const [suggests, setSuggests] = useState<Suggestion[]>([]);
-  const [sugLoading, setSugLoading] = useState(false);
-  const [related, setRelated] = useState<MovieItem[]>([]);
-  const [relatedLoading, setRelatedLoading] = useState(false);
-  const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">("none");
-  const [bannerLabel, setBannerLabel] = useState<string>("");
-  const hasQuery = query.trim() !== "";
-  const isUsingRelated = bannerMode !== "none";
-  const gridItems = isUsingRelated ? related : movies;
-  const isLoading = isUsingRelated ? relatedLoading : loading;
-  const noResult = hasQuery && !loading && !error && movies.length === 0 && !isUsingRelated;
 
-  const handleSuggestClick = async (s: Suggestion) => {
-    setRelated([]);
-    setBannerLabel(s.label);
 
-    if (s.type === "title") {
-      setBannerMode("title");
-      setRelatedLoading(true);
-      try {
-        const path = s.media === "movie" ? `/movie/${s.id}/recommendations` : `/tv/${s.id}/recommendations`;
-        const url = `${TMDB_BASE}${path}?api_key=${TMDB_KEY}&language=ko-KR&page=1`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const list: MovieItem[] = (data.results ?? []).filter((it: any) => it.poster_path || it.backdrop_path);
-        setRelated(list.map(it => ({...it, media_type: s.media})));
-      } finally {
-        setRelatedLoading(false);
-      }
-    }
-
-    if (s.type === "keyword") {
-      setBannerMode("keyword");
-      setRelatedLoading(true);
-      try {
-        const url = `${TMDB_BASE}/discover/movie?api_key=${TMDB_KEY}&language=ko-KR&include_adult=false&with_keywords=${s.id}&sort_by=popularity.desc&page=1`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const list: MovieItem[] = (data.results ?? []).filter((it: any) => it.poster_path || it.backdrop_path);
-        setRelated(list.map(it => ({...it, media_type: 'movie'})));
-      } finally {
-        setRelatedLoading(false);
-      }
-    }
-  };
-  
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node) && !query.trim() && !isSearchRoute) {
@@ -173,7 +124,7 @@ export default function Search({
     };
     if (showSearch) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [showSearch, query, isSearchRoute]);
+  }, [showSearch, query, isSearchRoute]);
 
 
   useEffect(() => {
@@ -204,8 +155,8 @@ export default function Search({
 
   const headerContent = (
       <S.HeaderBar>
-         <S.Logo href="/home">
-            <S.LogoImg src={logoSrc || logo} alt='Netflix' />
+        <S.Logo href="/home">
+          <S.LogoImg src={logoSrc || logo} alt='Netflix' />
         </S.Logo>
         <S.Ul>
           <S.Li ref={dropdownRef}>
@@ -234,12 +185,12 @@ export default function Search({
         <S.HeaderActions>
           {showSearch ? (
             <S.SearchBtn ref={searchRef}>
-              <S.Searchimg aria-label="검색"><S.Svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm6 5l-4-4"></path></S.Svg></S.Searchimg>
+              <S.Searchimg aria-label="검색"><S.Svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeWidth="2" d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm6 5l-4-4"></path></S.Svg></S.Searchimg>
               <S.SearchBox placeholder="제목, 사람, 장르" value={query} onChange={(e) => setQuery(e.target.value)} />
               {query && (<S.SearchDel onClick={handleClearSearch} role="button" aria-label="검색어 삭제">⨯</S.SearchDel>)}
             </S.SearchBtn>
           ) : (
-            <S.SearchIconBox aria-label="검색" onClick={() => setShowSearch(true)}><S.Svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm6 5l-4-4"></path></S.Svg></S.SearchIconBox>
+            <S.SearchIconBox aria-label="검색" onClick={() => setShowSearch(true)}><S.Svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeWidth="2" d="M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm6 5l-4-4"></path></S.Svg></S.SearchIconBox>
           )}
           <S.IconBox aria-label="알림"><S.Svg viewBox="0 0 24 24"><path d="M13.0002 4.07092C16.3924 4.55624 19 7.4736 19 11V15.2538C20.0489 15.3307 21.0851 15.4245 22.1072 15.5347L21.8928 17.5232C18.7222 17.1813 15.4092 17 12 17C8.59081 17 5.27788 17.1813 2.10723 17.5232L1.89282 15.5347C2.91498 15.4245 3.95119 15.3307 5.00003 15.2538V11C5.00003 7.47345 7.60784 4.55599 11.0002 4.07086V2H13.0002V4.07092ZM17 15.1287V11C17 8.23858 14.7614 6 12 6C9.2386 6 7.00003 8.23858 7.00003 11V15.1287C8.64066 15.0437 10.3091 15 12 15C13.691 15 15.3594 15.0437 17 15.1287ZM8.62593 19.3712C8.66235 20.5173 10.1512 22 11.9996 22C13.848 22 15.3368 20.5173 15.3732 19.3712C15.3803 19.1489 15.1758 19 14.9533 19H9.0458C8.82333 19 8.61886 19.1489 8.62593 19.3712Z" fill="currentColor"></path></S.Svg></S.IconBox>
           <div onMouseEnter={() => setIsProfileOpen(true)} onMouseLeave={() => setIsProfileOpen(false)}>
@@ -276,13 +227,12 @@ export default function Search({
             </S.text>
           ) : (
             <>
-              {hasQuery && (<S.RecommendBox> {/* ... 추천어 로직 ... */} </S.RecommendBox>)}
               <S.ReMovie>
-                {isLoading || relatedLoading ? (<div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>) : null}
+                {loading ? (<div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>) : null}
                 {error && (<div style={{ margin: "0 60px", color: "tomato" }}>오류: {error}</div>)}
-                {!loading && !error && gridItems.length > 0 && (
+                {!loading && !error && movies.length > 0 && (
                   <S.MovieGrid>
-                    {gridItems.map((m) => {
+                    {movies.map((m) => {
                       const title = m.title || m.name || "제목 없음";
                       const img = (m.poster_path && `${TMDB_IMG}${m.poster_path}`) || (m.backdrop_path && `${TMDB_IMG}${m.backdrop_path}`) || "";
                       return (
