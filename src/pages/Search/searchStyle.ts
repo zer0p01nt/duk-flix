@@ -101,7 +101,7 @@ export const IconBox = styled.div`
   &:hover {
     cursor: pointer;
   }
-    @media (max-width:380px) {
+    @media (max-width:500px) {
     display: none;
   }
 `;
