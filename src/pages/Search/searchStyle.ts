@@ -101,6 +101,9 @@ export const IconBox = styled.div`
   &:hover {
     cursor: pointer;
   }
+    @media (max-width:380px) {
+    display: none;
+  }
 `;
 
 export const SearchIconBox = styled.div`
