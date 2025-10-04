@@ -162,6 +162,11 @@ export const Form = styled.form`
   align-items: flex-start;
   width: 50vw;
   max-width: 37.5rem;
+  flex-wrap: wrap;
+  /* 모바일에선 버튼이 입력창 밑 가운데로 가도록 */
+  ${media.tablet`
+      justify-content: center;
+  `}
 `;
 
 export const InputWrapper = styled.div`
@@ -177,9 +182,7 @@ export const Button = styled.button`
   justify-content: center;
   align-items: center;
   text-align: center;
-
   gap: 0.5rem;
-  /* 일단은 이렇게 - 더 나은 방법이 있나 찾아보기 */
   height: 58px;
   background-color: ${theme.color.primary};
   color: ${theme.color.white};

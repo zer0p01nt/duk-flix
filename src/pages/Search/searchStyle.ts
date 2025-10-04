@@ -19,7 +19,7 @@ export const HeaderSpacer = styled.div`
 `;
 
 export const HeaderBar = styled.header`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -33,6 +33,7 @@ export const HeaderBar = styled.header`
   gap: 20px;
   padding: 16px 42px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  margin-bottom: 16px;
 `;
 
 export const Logo = styled.a`
@@ -249,6 +250,7 @@ export const SearchNav = styled.div`
   font-size: clamp(8px, 2vw, 14px);
   cursor: pointer;
   white-space: nowrap;
+  color: ${theme.color.white};
 `;
 
 export const Dropdown = styled.div`
@@ -265,6 +267,7 @@ export const Dropdown = styled.div`
 
   width: 200px;
   top: 90px;
+  color: ${theme.color.white};
 `;
 
 export const Ul = styled.ul`

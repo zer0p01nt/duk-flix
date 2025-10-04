@@ -17,6 +17,7 @@ export const Hero = styled.section`
   position: relative;
   height: clamp(380px, 46vw, 720px);
   overflow: hidden;
+  margin-top: -66px;
 `;
 export const HeroBackdrop = styled.div<{ $bg: string }>`
   position: absolute;
