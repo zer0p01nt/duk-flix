@@ -218,6 +218,20 @@ export const SearchBox = styled.input`
   border: none;
   color: #fff;
   outline: none;
+
+  max-width: 60vw;
+  font-size: 16px;
+  margin-left: 8px;
+
+  @media (max-width: 768px) {
+    width: 120px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    font-size: 13px;
+  }
 `;
 
 export const SearchBtn = styled.div`
@@ -227,6 +241,10 @@ export const SearchBtn = styled.div`
   justify-content: center;
   padding: 0 4px;
   gap: 4px;
+   transition: all 0.3s ease;
+  max-width: 90vw; /* ✅ 화면 작아지면 넘치지 않게 제한 */
+  box-sizing: border-box;
+  overflow: hidden; /* ✅ 내부 요소 넘치지 않게 */
 `;
 
 export const Searchimg = styled.div`
