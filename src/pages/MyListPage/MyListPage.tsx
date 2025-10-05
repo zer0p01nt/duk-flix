@@ -11,6 +11,7 @@ import type { Media, TMDBMovieRaw, TMDBTVRaw } from "@/types/TMDB.type";
 import { mapMovie, mapTV, posterURL } from "@/util/mapMedias";
 import Footer from "@/components/Footer/Footer";
 
+// TMDB 데이터 가져오는 코드
 const api = axios.create({
   baseURL: "https://api.themoviedb.org/3",
   params: {
@@ -19,6 +20,7 @@ const api = axios.create({
   },
 });
 
+// DB에 저장된 myList 토대로 내가 찜한 영화 상세 정보 fetch
 const fetchMyListDetails = async (
   userId: string | undefined
 ): Promise<Media[]> => {

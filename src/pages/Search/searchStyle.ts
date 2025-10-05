@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import profile from "@/assets/profile.png";
 import { theme } from "@/styles/theme";
+import { media } from "@/styles/media";
 
 /* 페이지 & 공통 */
 export const SearchPage = styled.div`
@@ -18,7 +19,7 @@ export const HeaderSpacer = styled.div`
   height: 32px;
 `;
 
-export const HeaderBar = styled.header`
+export const HeaderBar = styled.header<{ $showSearch: boolean }>`
   position: sticky;
   top: 0;
   left: 0;
@@ -34,6 +35,13 @@ export const HeaderBar = styled.header`
   padding: 16px 42px;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
   margin-bottom: 16px;
+
+  /* 모바일 환경에서, 검색이 열려있을 때만 가운데 정렬 -> 한쪽으로 쏠리는 느낌 방지 */
+  ${({ $showSearch }) =>
+    $showSearch &&
+    media.mobile`
+      justify-content: center;
+    `}
 `;
 
 export const Logo = styled.a`
@@ -101,7 +109,7 @@ export const IconBox = styled.div`
   &:hover {
     cursor: pointer;
   }
-    @media (max-width:500px) {
+  @media (max-width: 500px) {
     display: none;
   }
 `;
@@ -244,7 +252,7 @@ export const SearchBtn = styled.div`
   justify-content: center;
   padding: 0 4px;
   gap: 4px;
-   transition: all 0.3s ease;
+  transition: all 0.3s ease;
   max-width: 90vw; /* ✅ 화면 작아지면 넘치지 않게 제한 */
   box-sizing: border-box;
   overflow: hidden; /* ✅ 내부 요소 넘치지 않게 */

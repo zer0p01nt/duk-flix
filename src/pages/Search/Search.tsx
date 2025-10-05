@@ -33,7 +33,6 @@ type Suggestion =
 // 키워드 검색 응답
 type KeywordItem = { id: number; name: string };
 
-
 export default function Search({
   apiKey,
   logoSrc,
@@ -62,21 +61,23 @@ export default function Search({
   const dropdownRef = useRef<HTMLLIElement>(null);
 
   // 추천어
-const [suggests, setSuggests] = useState<Suggestion[]>([]);
-const [sugLoading, setSugLoading] = useState(false);
+  const [suggests, setSuggests] = useState<Suggestion[]>([]);
+  const [sugLoading, setSugLoading] = useState(false);
 
-// 추천 클릭 시 관련작 표시
-const [related, setRelated] = useState<MovieItem[]>([]);
-const [relatedLoading, setRelatedLoading] = useState(false);
-const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">("none");
-const [bannerLabel, setBannerLabel] = useState("");
+  // 추천 클릭 시 관련작 표시
+  const [related, setRelated] = useState<MovieItem[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+  const [bannerMode, setBannerMode] = useState<"none" | "title" | "keyword">(
+    "none"
+  );
+  const [bannerLabel, setBannerLabel] = useState("");
 
-// 도출값
-const isUsingRelated = bannerMode !== "none";
-const gridItems = isUsingRelated ? related : movies;
-const isLoading = isUsingRelated ? relatedLoading : loading;
+  // 도출값
+  const isUsingRelated = bannerMode !== "none";
+  const gridItems = isUsingRelated ? related : movies;
+  const isLoading = isUsingRelated ? relatedLoading : loading;
 
-const [hasAnyMatch, setHasAnyMatch] = useState(false);
+  const [hasAnyMatch, setHasAnyMatch] = useState(false);
 
   const hasQuery = query.trim() !== "";
   const noResult = hasQuery && !loading && !error && movies.length === 0;
@@ -86,59 +87,65 @@ const [hasAnyMatch, setHasAnyMatch] = useState(false);
     navigate("/home");
   };
 
-// 검색어가 바뀌면 추천 모드 초기화
-useEffect(() => {
-  setBannerMode("none");
-  setRelated([]);
-  setRelatedLoading(false);
-}, [location.search]);
+  // 검색어가 바뀌면 추천 모드 초기화
+  useEffect(() => {
+    setBannerMode("none");
+    setRelated([]);
+    setRelatedLoading(false);
+  }, [location.search]);
 
-useEffect(() => {
-  const q = query.trim();
-  if (!q || !isSearchRoute || !TMDB_KEY) {
-    setSuggests([]);
-    return;
-  }
-
-  const ctrl = new AbortController();
-  const timer = setTimeout(async () => {
-    setSugLoading(true);
-    try {
-      // 1) 제목/작품 (movie,tv만)
-      const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(q)}&page=1&include_adult=false`;
-      const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
-      const titleData = await titleRes.json().catch(() => ({}));
-
-      const titleSugs: Suggestion[] = ((titleData.results ?? []) as MultiSearchItem[])
-        .filter((it) => it.media_type === "movie" || it.media_type === "tv")
-        .slice(0, 6)
-        .map((it) => ({
-          type: "title" as const,
-          id: it.id,
-          label: it.title || it.name || "",
-          media: it.media_type as "movie" | "tv",
-        }));
-
-      // 2) 키워드
-      const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&page=1`;
-      const kwRes = await fetch(kwUrl, { signal: ctrl.signal });
-      const kwData = await kwRes.json().catch(() => ({}));
-
-      const kwSugs: Suggestion[] = ((kwData.results ?? []) as KeywordItem[])
-        .slice(0, 6)
-        .map((k) => ({ type: "keyword" as const, id: k.id, label: k.name }));
-
-      setSuggests([...titleSugs, ...kwSugs].slice(0, 10));
-    } finally {
-      setSugLoading(false);
+  useEffect(() => {
+    const q = query.trim();
+    if (!q || !isSearchRoute || !TMDB_KEY) {
+      setSuggests([]);
+      return;
     }
-  }, 250);
 
-  return () => {
-    clearTimeout(timer);
-    ctrl.abort();
-  };
-}, [query, isSearchRoute, TMDB_KEY]);
+    const ctrl = new AbortController();
+    const timer = setTimeout(async () => {
+      setSugLoading(true);
+      try {
+        // 1) 제목/작품 (movie,tv만)
+        const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(
+          q
+        )}&page=1&include_adult=false`;
+        const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
+        const titleData = await titleRes.json().catch(() => ({}));
+
+        const titleSugs: Suggestion[] = (
+          (titleData.results ?? []) as MultiSearchItem[]
+        )
+          .filter((it) => it.media_type === "movie" || it.media_type === "tv")
+          .slice(0, 6)
+          .map((it) => ({
+            type: "title" as const,
+            id: it.id,
+            label: it.title || it.name || "",
+            media: it.media_type as "movie" | "tv",
+          }));
+
+        // 2) 키워드
+        const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(
+          q
+        )}&page=1`;
+        const kwRes = await fetch(kwUrl, { signal: ctrl.signal });
+        const kwData = await kwRes.json().catch(() => ({}));
+
+        const kwSugs: Suggestion[] = ((kwData.results ?? []) as KeywordItem[])
+          .slice(0, 6)
+          .map((k) => ({ type: "keyword" as const, id: k.id, label: k.name }));
+
+        setSuggests([...titleSugs, ...kwSugs].slice(0, 10));
+      } finally {
+        setSugLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
+  }, [query, isSearchRoute, TMDB_KEY]);
 
   // 검색어 입력 시 URL 실시간 변경
   useEffect(() => {
@@ -185,22 +192,21 @@ useEffect(() => {
         return res.json();
       })
 
-.then((data) => {
-  const results = ((data.results as MultiSearchItem[]) || []);
-  const any = results.some(
-    (it) => it.media_type === "movie" || it.media_type === "tv"
-  );
-  setHasAnyMatch(any);
+      .then((data) => {
+        const results = (data.results as MultiSearchItem[]) || [];
+        const any = results.some(
+          (it) => it.media_type === "movie" || it.media_type === "tv"
+        );
+        setHasAnyMatch(any);
 
-  // 화면에 그릴 목록 유지
-  const list: MovieItem[] = results.filter(
-    (it): it is MovieItem =>
-      (it.media_type === "movie" || it.media_type === "tv") &&
-      !!(it.poster_path || it.backdrop_path)
-  );
-  setMovies(list);
-})
-
+        // 화면에 그릴 목록 유지
+        const list: MovieItem[] = results.filter(
+          (it): it is MovieItem =>
+            (it.media_type === "movie" || it.media_type === "tv") &&
+            !!(it.poster_path || it.backdrop_path)
+        );
+        setMovies(list);
+      })
 
       .catch((e) => {
         if (e.name !== "AbortError") setError(e.message);
@@ -209,7 +215,6 @@ useEffect(() => {
 
     return () => ctrl.abort();
   }, [location.search, isSearchRoute, TMDB_KEY]);
-
 
   //드롭다운 외부 클릭
   useEffect(() => {
@@ -240,13 +245,13 @@ useEffect(() => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-    // 유저 이메일 주소 가져오기
+  // 유저 이메일 주소 가져오기
   // AuthContext 불러옴
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   const userEmail = currentUser?.email || "Guest";
 
-    // 로그아웃 로직
+  // 로그아웃 로직
   const handleSignOut = useCallback(async () => {
     if (confirm("로그아웃하시겠습니까?")) {
       try {
@@ -264,65 +269,67 @@ useEffect(() => {
     alert("개발되지 않은 기능입니다.");
   }, []);
 
-// 영화 클릭시 디테일 띄우기
-useEffect(() => {
-  const q = query.trim();
-  if (!q || !isSearchRoute) {
-    setSuggests([]);
-    return;
-  }
-  if (!TMDB_KEY) return;
-
-  const ctrl = new AbortController();
-  const timer = setTimeout(async () => {
-    setSugLoading(true);
-    try {
-      // 1) 제목/인물/작품 검색에서 movie,tv만 뽑기
-      const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(
-        q
-      )}&page=1&include_adult=false`;
-      const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
-      const titleData = await titleRes.json().catch(() => ({}));
-
-      type OnlyMovieTv = MultiSearchItem & { media_type: "movie" | "tv" };
-      const titleSugs: Suggestion[] = ((titleData.results ?? []) as MultiSearchItem[])
-        .filter(
-          (it): it is OnlyMovieTv =>
-            it.media_type === "movie" || it.media_type === "tv"
-        )
-        .slice(0, 6)
-        .map((it) => ({
-          type: "title" as const,
-          id: it.id,
-          label: it.title || it.name || "",
-          media: it.media_type,
-        }));
-
-      // 2) 키워드
-      const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(
-        q
-      )}&page=1`;
-      const kwRes = await fetch(kwUrl, { signal: ctrl.signal });
-      const kwData = await kwRes.json().catch(() => ({}));
-      const kwSugs: Suggestion[] = (kwData.results ?? [])
-        .slice(0, 6)
-        .map((k: { id: number; name: string }) => ({
-          type: "keyword" as const,
-          id: k.id,
-          label: k.name,
-        }));
-
-      setSuggests([...titleSugs, ...kwSugs].slice(0, 10));
-    } finally {
-      setSugLoading(false);
+  // 영화 클릭시 디테일 띄우기
+  useEffect(() => {
+    const q = query.trim();
+    if (!q || !isSearchRoute) {
+      setSuggests([]);
+      return;
     }
-  }, 250);
+    if (!TMDB_KEY) return;
 
-  return () => {
-    clearTimeout(timer);
-    ctrl.abort();
-  };
-}, [query, isSearchRoute, TMDB_KEY]);
+    const ctrl = new AbortController();
+    const timer = setTimeout(async () => {
+      setSugLoading(true);
+      try {
+        // 1) 제목/인물/작품 검색에서 movie,tv만 뽑기
+        const titleUrl = `${TMDB_BASE}/search/multi?api_key=${TMDB_KEY}&language=ko-KR&query=${encodeURIComponent(
+          q
+        )}&page=1&include_adult=false`;
+        const titleRes = await fetch(titleUrl, { signal: ctrl.signal });
+        const titleData = await titleRes.json().catch(() => ({}));
+
+        type OnlyMovieTv = MultiSearchItem & { media_type: "movie" | "tv" };
+        const titleSugs: Suggestion[] = (
+          (titleData.results ?? []) as MultiSearchItem[]
+        )
+          .filter(
+            (it): it is OnlyMovieTv =>
+              it.media_type === "movie" || it.media_type === "tv"
+          )
+          .slice(0, 6)
+          .map((it) => ({
+            type: "title" as const,
+            id: it.id,
+            label: it.title || it.name || "",
+            media: it.media_type,
+          }));
+
+        // 2) 키워드
+        const kwUrl = `${TMDB_BASE}/search/keyword?api_key=${TMDB_KEY}&query=${encodeURIComponent(
+          q
+        )}&page=1`;
+        const kwRes = await fetch(kwUrl, { signal: ctrl.signal });
+        const kwData = await kwRes.json().catch(() => ({}));
+        const kwSugs: Suggestion[] = (kwData.results ?? [])
+          .slice(0, 6)
+          .map((k: { id: number; name: string }) => ({
+            type: "keyword" as const,
+            id: k.id,
+            label: k.name,
+          }));
+
+        setSuggests([...titleSugs, ...kwSugs].slice(0, 10));
+      } finally {
+        setSugLoading(false);
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
+  }, [query, isSearchRoute, TMDB_KEY]);
 
   //추천클릭
   const handleSuggestClick = async (s: Suggestion) => {
@@ -367,7 +374,7 @@ useEffect(() => {
   };
 
   const headerContent = (
-    <S.HeaderBar>
+    <S.HeaderBar $showSearch={showSearch}>
       <S.Logo href='/home'>
         <S.LogoImg src={logoSrc || logo} alt='Netflix' />
       </S.Logo>
@@ -516,94 +523,92 @@ useEffect(() => {
         {headerContent}
         <S.HeaderSpacer />
         <S.main>
-                  {/* 추천검색어 */}
-        {hasQuery && !noResult && (
-          <S.RecommendBox>
-            <S.RecommendTitle>
-              더 다양한 검색어가 필요하시다면!:
-            </S.RecommendTitle>
-            <S.Recommend>
-              {sugLoading && <span>추천어 로딩…</span>}
-              {!sugLoading &&
-                suggests.map((s) => (
-                  <S.RecommendIcon
-                    key={`${s.type}-${s.id}`}
-                    onClick={() => handleSuggestClick(s)}
-                  >
-                    {s.label}
-                  </S.RecommendIcon>
-                ))}
-            </S.Recommend>
-          </S.RecommendBox>
-        )}
-            
-            {/* 추천영화 */}
-              <S.ReMovie>
-                
-                {hasQuery && isLoading && (
-            <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
+          {/* 추천검색어 */}
+          {hasQuery && !noResult && (
+            <S.RecommendBox>
+              <S.RecommendTitle>
+                더 다양한 검색어가 필요하시다면!:
+              </S.RecommendTitle>
+              <S.Recommend>
+                {sugLoading && <span>추천어 로딩…</span>}
+                {!sugLoading &&
+                  suggests.map((s) => (
+                    <S.RecommendIcon
+                      key={`${s.type}-${s.id}`}
+                      onClick={() => handleSuggestClick(s)}
+                    >
+                      {s.label}
+                    </S.RecommendIcon>
+                  ))}
+              </S.Recommend>
+            </S.RecommendBox>
           )}
 
-          {hasQuery && bannerMode !== "none" && (
-            <S.ReOther>
-              {bannerMode === "title" && !hasAnyMatch
-                ? `“${bannerLabel}” 작품은 없습니다. 대신 이런 작품들은 어떠세요?`
-                : `${bannerLabel} 검색 결과 && 다른 인기 콘텐츠`}
-            </S.ReOther>
-          )}
+          {/* 추천영화 */}
+          <S.ReMovie>
+            {hasQuery && isLoading && (
+              <div style={{ margin: "0 60px", opacity: 0.7 }}>불러오는 중…</div>
+            )}
 
-          {hasQuery && error && (
-            <div style={{ margin: "0 60px", color: "tomato" }}>
-              오류: {error}
-            </div>
-          )}
+            {hasQuery && bannerMode !== "none" && (
+              <S.ReOther>
+                {bannerMode === "title" && !hasAnyMatch
+                  ? `“${bannerLabel}” 작품은 없습니다. 대신 이런 작품들은 어떠세요?`
+                  : `${bannerLabel} 검색 결과 && 다른 인기 콘텐츠`}
+              </S.ReOther>
+            )}
 
-          {hasQuery && !loading && !error && movies.length > 0 && (
-  <S.MovieGrid>
-    {(gridItems.length > 0 ? gridItems : movies).map((m) => {
-      const title = m.title || m.name || "제목 없음";
-      const img =
-        (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
-        (m.backdrop_path && `${TMDB_IMG}${m.backdrop_path}`) ||
-        "";
-      return (
-        <Link key={m.id} to={`/search/${m.media_type}/${m.id}`}>
-          <S.Movie key={m.id}>
-            <S.MovieLink href={`#movie-${m.id}`}>
-              <S.Poster src={img} alt={title} title={title} />
-            </S.MovieLink>
-          </S.Movie>
-        </Link>
-      );
-    })}
-  </S.MovieGrid>
-)}
+            {hasQuery && error && (
+              <div style={{ margin: "0 60px", color: "tomato" }}>
+                오류: {error}
+              </div>
+            )}
 
-          
-          {/* 결과 없음 */}
-          {noResult && (
-            <S.text>
-              <S.NoSearch>
-                <S.NoSearchTitle>
-                  입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다.
-                </S.NoSearchTitle>
-                <S.ReSearch>추천 검색어:</S.ReSearch>
-                <S.ReSearchUl>
-                  <S.ReSearchLi>다른 키워드를 입력해 보세요.</S.ReSearchLi>
-                  <S.ReSearchLi>시리즈나 영화를 찾고 계신가요?</S.ReSearchLi>
-                  <S.ReSearchLi>
-                    영화 제목, 시리즈 제목, 또는 배우나 감독의 이름으로 검색해
-                    보세요.
-                  </S.ReSearchLi>
-                  <S.ReSearchLi>
-                    코미디, 로맨스, 스포츠 또는 드라마와 같은 장르명으로 검색해
-                    보세요.
-                  </S.ReSearchLi>
-                </S.ReSearchUl>
-              </S.NoSearch>
-            </S.text>
-          )}
-              </S.ReMovie>
+            {hasQuery && !loading && !error && movies.length > 0 && (
+              <S.MovieGrid>
+                {(gridItems.length > 0 ? gridItems : movies).map((m) => {
+                  const title = m.title || m.name || "제목 없음";
+                  const img =
+                    (m.poster_path && `${TMDB_IMG}${m.poster_path}`) ||
+                    (m.backdrop_path && `${TMDB_IMG}${m.backdrop_path}`) ||
+                    "";
+                  return (
+                    <Link key={m.id} to={`/search/${m.media_type}/${m.id}`}>
+                      <S.Movie key={m.id}>
+                        <S.MovieLink href={`#movie-${m.id}`}>
+                          <S.Poster src={img} alt={title} title={title} />
+                        </S.MovieLink>
+                      </S.Movie>
+                    </Link>
+                  );
+                })}
+              </S.MovieGrid>
+            )}
+
+            {/* 결과 없음 */}
+            {noResult && (
+              <S.text>
+                <S.NoSearch>
+                  <S.NoSearchTitle>
+                    입력하신 검색어 '{query}'(와)과 일치하는 결과가 없습니다.
+                  </S.NoSearchTitle>
+                  <S.ReSearch>추천 검색어:</S.ReSearch>
+                  <S.ReSearchUl>
+                    <S.ReSearchLi>다른 키워드를 입력해 보세요.</S.ReSearchLi>
+                    <S.ReSearchLi>시리즈나 영화를 찾고 계신가요?</S.ReSearchLi>
+                    <S.ReSearchLi>
+                      영화 제목, 시리즈 제목, 또는 배우나 감독의 이름으로 검색해
+                      보세요.
+                    </S.ReSearchLi>
+                    <S.ReSearchLi>
+                      코미디, 로맨스, 스포츠 또는 드라마와 같은 장르명으로
+                      검색해 보세요.
+                    </S.ReSearchLi>
+                  </S.ReSearchUl>
+                </S.NoSearch>
+              </S.text>
+            )}
+          </S.ReMovie>
         </S.main>
         <Outlet />
         {/* 푸터 */}

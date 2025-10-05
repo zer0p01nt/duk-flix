@@ -58,6 +58,7 @@ export const HeroDesc = styled.p`
   margin: 0;
   max-width: 56ch;
   width: 360px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
 `;
 export const BtnRow = styled.div`
   display: flex;

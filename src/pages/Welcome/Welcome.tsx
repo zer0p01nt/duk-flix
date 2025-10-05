@@ -15,6 +15,7 @@ interface FAQData {
   linkUrl?: string;
 }
 
+// FAQ 리스트
 const faqData: FAQData[] = [
   {
     id: 1,
@@ -62,6 +63,7 @@ export default function Welcome(): React.JSX.Element {
   const [openDataId, setOpenDataId] = useState<number | null>(null);
   const navigate: NavigateFunction = useNavigate();
 
+  // EmailInput을 사용하기 위해 임의로 변수 선언
   const isPending = false;
 
   const onSubmit = (e: React.FormEvent) => {
@@ -135,8 +137,8 @@ export default function Welcome(): React.JSX.Element {
                     role='img'
                   >
                     <path
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M15.5859 12L8.29303 19.2928L9.70725 20.7071L17.7072 12.7071C17.8948 12.5195 18.0001 12.2652 18.0001 12C18.0001 11.7347 17.8948 11.4804 17.7072 11.2928L9.70724 3.29285L8.29303 4.70706L15.5859 12Z'
                       fill='currentColor'
                     ></path>
@@ -163,14 +165,14 @@ export default function Welcome(): React.JSX.Element {
                 fill='url(#b)'
               ></path>
               <path
-                fill-rule='evenodd'
-                clip-rule='evenodd'
+                fillRule='evenodd'
+                clipRule='evenodd'
                 d='M75.376 75.624a2.36 2.36 0 1 0-2.817 1.408c-.062.157-.107.32-.134.486a3.15 3.15 0 0 0-1.161 4.298 3.146 3.146 0 0 0 4.297 1.161 3.148 3.148 0 0 0 4.927 2.228 2.36 2.36 0 1 0 3.662-2.809 3.148 3.148 0 0 0-4.448-4.447 2.355 2.355 0 0 0-2.67-.669 2.365 2.365 0 0 0-1.656-1.656Zm-50.983 1.49c0 .31-.044.619-.134.915a4.328 4.328 0 1 1-3.256 7.922 2.743 2.743 0 0 1-1.724.606c-.477.001-.946-.123-1.36-.358a1.966 1.966 0 0 1-3.74-.569 2.36 2.36 0 1 1-.013-4.445 3.148 3.148 0 0 1 4.07-3.145 3.148 3.148 0 1 1 6.157-.925Z'
                 fill='url(#c)'
               ></path>
               <path
-                fill-rule='evenodd'
-                clip-rule='evenodd'
+                fillRule='evenodd'
+                clipRule='evenodd'
                 d='M51.934 20.459c0 .388-.07.76-.198 1.102.234.114.452.256.65.422a3.146 3.146 0 0 1 3.102-1.498 3.147 3.147 0 0 1 5.888 1.646 3.154 3.154 0 0 1 1.953 1.498c.783.095 1.501.48 2.013 1.078a3.935 3.935 0 0 1 4.868 5.726c.559.375.983.918 1.212 1.552a3.148 3.148 0 0 1 5.26 3.445 3.147 3.147 0 1 1-3.08 4.701H24.392v-1.208a3.148 3.148 0 0 1-4.346-4.217 3.148 3.148 0 0 1 3.478-5.215 3.142 3.142 0 0 1 2.442-1.164 3.147 3.147 0 0 1 3.554-3.122 3.147 3.147 0 0 1 3.18-1.568 3.147 3.147 0 0 1 4.803-3.954 3.15 3.15 0 0 1 3.238 2.094c.41-.276.88-.45 1.371-.51a3.147 3.147 0 0 1 3.597-1.478 3.148 3.148 0 0 1 6.224.67Z'
                 fill='url(#d)'
               ></path>
@@ -258,8 +260,8 @@ export default function Welcome(): React.JSX.Element {
                 fill='url(#u)'
               ></path>
               <path
-                fill-rule='evenodd'
-                clip-rule='evenodd'
+                fillRule='evenodd'
+                clipRule='evenodd'
                 d='m46.33 47.333.254-10.35h-9.388l.104 9.84a16.418 16.418 0 0 0-4.664 1.825l-.327-11.664h-9.407l2.927 51.934h7.943l-.317-11.22a16.431 16.431 0 0 0 4.187 1.453l.105 9.767h7.558l.25-10.101a16.449 16.449 0 0 0 3.675-1.58l-.37 11.681h8.321l2.741-51.934h-9.417l-.388 12.237a16.47 16.47 0 0 0-3.788-1.888Zm16.078 40.89 2.95-.786 5.845-48.488-4.501-1.186-4.294 50.46Zm4.63-1.234 2.317-.618 7.838-45.846-4.375-1.152-5.78 47.616ZM53.507 62.95c0 6.953-5.636 12.59-12.59 12.59s-12.59-5.636-12.59-12.59 5.636-12.59 12.59-12.59 12.59 5.636 12.59 12.59Zm-7.172 6.795L44.64 64.26l4.108-3.047a.39.39 0 0 0-.2-.702 93.591 93.591 0 0 0-5.184-.274l-2.076-5.712a.394.394 0 0 0-.74 0l-2.076 5.712c-1.76.044-3.49.137-5.185.274a.39.39 0 0 0-.198.702l4.107 3.046-1.696 5.485a.394.394 0 0 0 .598.442l4.82-3.281 4.82 3.281a.394.394 0 0 0 .599-.441h-.001Z'
                 fill='url(#v)'
               ></path>
@@ -309,8 +311,8 @@ export default function Welcome(): React.JSX.Element {
                 fill='url(#E)'
               ></path>
               <path
-                fill-rule='evenodd'
-                clip-rule='evenodd'
+                fillRule='evenodd'
+                clipRule='evenodd'
                 d='M73.967 79.475a2.361 2.361 0 0 1 2.36 2.361 3.148 3.148 0 1 1-.88 6.17 2.36 2.36 0 0 1-4.613-.92 2.755 2.755 0 0 1 .773-5.222v-.028a2.36 2.36 0 0 1 2.36-2.36Z'
                 fill='url(#F)'
               ></path>
@@ -323,13 +325,13 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='matrix(0 -8.70201 48.2567 0 48 86.604)'
                 >
-                  <stop offset='0.286' stop-color='#7D2889'></stop>
+                  <stop offset='0.286' stopColor='#7D2889'></stop>
                   <stop
                     offset='0.724'
-                    stop-color='#FF66D9'
-                    stop-opacity='0.41'
+                    stopColor='#FF66D9'
+                    stopOpacity='0.41'
                   ></stop>
-                  <stop offset='1' stop-color='#fff' stop-opacity='0'></stop>
+                  <stop offset='1' stopColor='#fff' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='b'
@@ -339,13 +341,13 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='matrix(0 -38.3681 48.2567 0 48 39.155)'
                 >
-                  <stop stop-color='#FFCA45'></stop>
+                  <stop stopColor='#FFCA45'></stop>
                   <stop
                     offset='0.453'
-                    stop-color='#FF66D9'
-                    stop-opacity='0.36'
+                    stopColor='#FF66D9'
+                    stopOpacity='0.36'
                   ></stop>
-                  <stop offset='1' stop-color='#fff' stop-opacity='0'></stop>
+                  <stop offset='1' stopColor='#fff' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='c'
@@ -355,9 +357,9 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(180 23.41 39.738) scale(37.7705)'
                 >
-                  <stop offset='0.432' stop-color='#FF8B54'></stop>
-                  <stop offset='0.76' stop-color='#FFBB8D'></stop>
-                  <stop offset='1' stop-color='#F9DDD1'></stop>
+                  <stop offset='0.432' stopColor='#FF8B54'></stop>
+                  <stop offset='0.76' stopColor='#FFBB8D'></stop>
+                  <stop offset='1' stopColor='#F9DDD1'></stop>
                 </radialGradient>
                 <radialGradient
                   id='d'
@@ -367,9 +369,9 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='matrix(0 -10.623 28.257 0 47.607 27.934)'
                 >
-                  <stop offset='0.302' stop-color='#F9DDD1'></stop>
-                  <stop offset='0.674' stop-color='#FFBB8D'></stop>
-                  <stop offset='1' stop-color='#FF8B54'></stop>
+                  <stop offset='0.302' stopColor='#F9DDD1'></stop>
+                  <stop offset='0.674' stopColor='#FFBB8D'></stop>
+                  <stop offset='1' stopColor='#FF8B54'></stop>
                 </radialGradient>
                 <radialGradient
                   id='e'
@@ -379,8 +381,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 8.042 37.99) scale(7.03568)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='f'
@@ -390,8 +392,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 8.112 35.56) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='g'
@@ -401,8 +403,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 5.358 36.74) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='h'
@@ -412,8 +414,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -3.298 30.445) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='i'
@@ -423,8 +425,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -.544 30.839) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='j'
@@ -434,8 +436,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -2.442 32.737) scale(2.59209)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='k'
@@ -445,8 +447,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 19.985 53.59) scale(2.59209)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='l'
@@ -456,8 +458,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 19.614 57.107) scale(1.85149)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='m'
@@ -467,8 +469,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 17.994 54.792) scale(3.33269)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='n'
@@ -478,8 +480,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 18.41 40.212) scale(2.59209)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='o'
@@ -489,8 +491,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 14.5 33.894) scale(1.8515)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='p'
@@ -500,8 +502,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 6.63 28.386) scale(1.85149)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='q'
@@ -511,8 +513,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 16.768 45.003) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='r'
@@ -522,8 +524,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 15.194 41.855) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='s'
@@ -533,8 +535,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 15.194 44.216) scale(4.81389)'
                 >
-                  <stop offset='0.375' stop-color='#FFF4EB'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#FFF4EB'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='w'
@@ -544,8 +546,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -31.927 48.845) scale(1.8515)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='x'
@@ -555,8 +557,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -34.681 48.452) scale(1.8515)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='y'
@@ -566,8 +568,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -33.5 49.632) scale(1.8515)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='z'
@@ -577,8 +579,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -32.714 51.993) scale(1.85149)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='A'
@@ -588,8 +590,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -.845 83.075) scale(1.85149)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='B'
@@ -599,8 +601,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 .718 81.118) scale(2.2218)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='C'
@@ -610,8 +612,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -1.25 79.151) scale(2.2218)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='D'
@@ -621,8 +623,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -2.048 77.196) scale(2.5921)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='E'
@@ -632,8 +634,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(90 -31.95 50.442) scale(2.5921)'
                 >
-                  <stop offset='0.375' stop-color='#F9DDD1'></stop>
-                  <stop offset='1' stop-color='#FFF3EB' stop-opacity='0'></stop>
+                  <stop offset='0.375' stopColor='#F9DDD1'></stop>
+                  <stop offset='1' stopColor='#FFF3EB' stopOpacity='0'></stop>
                 </radialGradient>
                 <radialGradient
                   id='F'
@@ -643,8 +645,8 @@ export default function Welcome(): React.JSX.Element {
                   gradientUnits='userSpaceOnUse'
                   gradientTransform='rotate(111.038 9.116 68.506) scale(5.48002)'
                 >
-                  <stop stop-color='#FDF7F2'></stop>
-                  <stop offset='1' stop-color='#FFD8BD'></stop>
+                  <stop stopColor='#FDF7F2'></stop>
+                  <stop offset='1' stopColor='#FFD8BD'></stop>
                 </radialGradient>
                 <linearGradient
                   id='t'
@@ -654,9 +656,9 @@ export default function Welcome(): React.JSX.Element {
                   y2='21.046'
                   gradientUnits='userSpaceOnUse'
                 >
-                  <stop stop-color='#E0B1CC'></stop>
-                  <stop offset='0.431' stop-color='#FFF1F1'></stop>
-                  <stop offset='1' stop-color='#FFC9A5'></stop>
+                  <stop stopColor='#E0B1CC'></stop>
+                  <stop offset='0.431' stopColor='#FFF1F1'></stop>
+                  <stop offset='1' stopColor='#FFC9A5'></stop>
                 </linearGradient>
                 <linearGradient
                   id='u'
@@ -666,8 +668,8 @@ export default function Welcome(): React.JSX.Element {
                   y2='53.115'
                   gradientUnits='userSpaceOnUse'
                 >
-                  <stop stop-color='#D16AE9'></stop>
-                  <stop offset='1' stop-color='#FF661D'></stop>
+                  <stop stopColor='#D16AE9'></stop>
+                  <stop offset='1' stopColor='#FF661D'></stop>
                 </linearGradient>
                 <linearGradient
                   id='v'
@@ -677,9 +679,9 @@ export default function Welcome(): React.JSX.Element {
                   y2='85.621'
                   gradientUnits='userSpaceOnUse'
                 >
-                  <stop stop-color='#FF661D'></stop>
-                  <stop offset='0.5' stop-color='#CE3A00'></stop>
-                  <stop offset='1' stop-color='#A60A5E'></stop>
+                  <stop stopColor='#FF661D'></stop>
+                  <stop offset='0.5' stopColor='#CE3A00'></stop>
+                  <stop offset='1' stopColor='#A60A5E'></stop>
                 </linearGradient>
               </defs>
             </svg>
@@ -714,8 +716,8 @@ export default function Welcome(): React.JSX.Element {
                   <g id='television-core-small'>
                     <path
                       id='Vector'
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M37.2 53.3992C37.2 52.7365 36.6628 52.1992 36 52.1992H34.8C34.1373 52.1992 33.6 52.7365 33.6 53.3992V56.2636C33.6 56.9129 33.0834 57.4433 32.4347 57.4739C30.3013 57.5744 28.1719 57.7834 26.0546 58.1011L19.444 59.0926C18.2692 59.2688 17.4 60.2782 17.4 61.4662V62.0992C17.4 62.4304 17.6686 62.6992 18 62.6992H52.8C53.1314 62.6992 53.4 62.4304 53.4 62.0992V61.4662C53.4 60.2782 52.5309 59.2688 51.3561 59.0926L44.7454 58.1011C42.6282 57.7834 40.4987 57.5744 38.3653 57.4739C37.7167 57.4433 37.2 56.9129 37.2 56.2636V53.3992Z'
                       fill='url(#paint0_radial_5179_1308)'
                     ></path>
@@ -736,8 +738,8 @@ export default function Welcome(): React.JSX.Element {
                     ></path>
                     <path
                       id='Vector_5'
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M8.99995 12.6H63C63.663 12.6 64.2 13.1372 64.2 13.8V50.4H7.79995V13.8C7.79995 13.1372 8.33719 12.6 8.99995 12.6ZM7.19995 50.4V13.8C7.19995 12.8059 8.00581 12 8.99995 12H63C63.9942 12 64.8 12.8059 64.8 13.8V50.4V51.6C64.8 52.5941 63.9942 53.4 63 53.4H8.99995C8.00581 53.4 7.19995 52.5941 7.19995 51.6V50.4Z'
                       fill='url(#paint4_radial_5179_1308)'
                     ></path>
@@ -756,10 +758,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(50.3269 49.3723) rotate(118.526) scale(55.1579 46.2871)'
                     >
-                      <stop stop-color='#802600'></stop>
-                      <stop offset='0.333333' stop-color='#6F181D'></stop>
-                      <stop offset='0.666667' stop-color='#5B1333'></stop>
-                      <stop offset='1' stop-color='#391945'></stop>
+                      <stop stopColor='#802600'></stop>
+                      <stop offset='0.333333' stopColor='#6F181D'></stop>
+                      <stop offset='0.666667' stopColor='#5B1333'></stop>
+                      <stop offset='1' stopColor='#391945'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint1_radial_5179_1308'
@@ -769,10 +771,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(48.1077 53.6128) rotate(158.116) scale(32.7275 42.219)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <linearGradient
                       id='paint2_linear_5179_1308'
@@ -782,12 +784,12 @@ export default function Welcome(): React.JSX.Element {
                       y2='51.4814'
                       gradientUnits='userSpaceOnUse'
                     >
-                      <stop stop-color='#99161D'></stop>
-                      <stop offset='0.245283' stop-color='#CA005B'></stop>
-                      <stop offset='0.346698' stop-color='#FF479A'></stop>
-                      <stop offset='0.46934' stop-color='#CC3CFF'></stop>
-                      <stop offset='0.735849' stop-color='#BC1A22'></stop>
-                      <stop offset='1' stop-color='#C94FF5'></stop>
+                      <stop stopColor='#99161D'></stop>
+                      <stop offset='0.245283' stopColor='#CA005B'></stop>
+                      <stop offset='0.346698' stopColor='#FF479A'></stop>
+                      <stop offset='0.46934' stopColor='#CC3CFF'></stop>
+                      <stop offset='0.735849' stopColor='#BC1A22'></stop>
+                      <stop offset='1' stopColor='#C94FF5'></stop>
                     </linearGradient>
                     <radialGradient
                       id='paint3_radial_5179_1308'
@@ -797,8 +799,8 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(38.6181 23.8286) rotate(90) scale(25.9571 25.8545)'
                     >
-                      <stop stop-color='#1C0E20' stop-opacity='0'></stop>
-                      <stop offset='1' stop-color='#1C0E20'></stop>
+                      <stop stopColor='#1C0E20' stopOpacity='0'></stop>
+                      <stop offset='1' stopColor='#1C0E20'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint4_radial_5179_1308'
@@ -808,10 +810,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(54 20.1938) rotate(144.293) scale(47.2897 44.8232)'
                     >
-                      <stop stop-color='#EF7744'></stop>
-                      <stop offset='0.333333' stop-color='#E50914'></stop>
-                      <stop offset='0.666667' stop-color='#A70D53'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#EF7744'></stop>
+                      <stop offset='0.333333' stopColor='#E50914'></stop>
+                      <stop offset='0.666667' stopColor='#A70D53'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint5_radial_5179_1308'
@@ -821,10 +823,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(36.525 51.3562) rotate(135) scale(4.58735)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FFBDC0'></stop>
-                      <stop offset='0.666667' stop-color='#F89DC6'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FFBDC0'></stop>
+                      <stop offset='0.666667' stopColor='#F89DC6'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                   </defs>
                 </svg>
@@ -868,16 +870,16 @@ export default function Welcome(): React.JSX.Element {
                     ></path>
                     <path
                       id='Vector_6'
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M39.0849 42.2727L46.3387 35.76L48.8945 38.5142L38.9118 47.477L37.8466 48.4333L36.6071 47.477L24.9899 38.5142L27.0434 35.76L35.4849 42.2727L33.6 21.6016H37.2L39.0849 42.2727Z'
                       fill='url(#paint5_radial_5179_7940)'
                     ></path>
                     <path
                       id='Vector_7'
                       opacity='0.4'
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M61.6566 34.9618C61.7832 35.3893 62.391 35.3233 62.3694 34.878C61.6962 21.1369 50.1509 9.55975 36.5817 9.01957C34.4606 8.93515 32.4155 9.12541 30.4772 9.55909C30.0745 9.64915 30.1575 10.2082 30.5697 10.2246C45.0094 10.7979 57.6246 21.2971 61.6566 34.9618Z'
                       fill='url(#paint6_radial_5179_7940)'
                     ></path>
@@ -891,16 +893,16 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(36.0001 36.1837) rotate(-90) scale(34.3829)'
                     >
-                      <stop offset='0.782019' stop-color='#982DBE'></stop>
+                      <stop offset='0.782019' stopColor='#982DBE'></stop>
                       <stop
                         offset='0.906819'
-                        stop-color='#B038DC'
-                        stop-opacity='0.2'
+                        stopColor='#B038DC'
+                        stopOpacity='0.2'
                       ></stop>
                       <stop
                         offset='1'
-                        stop-color='#E4A1FA'
-                        stop-opacity='0'
+                        stopColor='#E4A1FA'
+                        stopOpacity='0'
                       ></stop>
                     </radialGradient>
                     <radialGradient
@@ -911,10 +913,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(52.9937 20.0992) rotate(135) scale(49.9836)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FFBDC0'></stop>
-                      <stop offset='0.666667' stop-color='#F89DC6'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FFBDC0'></stop>
+                      <stop offset='0.666667' stopColor='#F89DC6'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint2_radial_5179_7940'
@@ -924,10 +926,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(52.7999 19.6937) rotate(135) scale(53.1037)'
                     >
-                      <stop stop-color='#FFA984'></stop>
-                      <stop offset='0.333333' stop-color='#FF787F'></stop>
-                      <stop offset='0.666667' stop-color='#F45FA2'></stop>
-                      <stop offset='1' stop-color='#C44AF1'></stop>
+                      <stop stopColor='#FFA984'></stop>
+                      <stop offset='0.333333' stopColor='#FF787F'></stop>
+                      <stop offset='0.666667' stopColor='#F45FA2'></stop>
+                      <stop offset='1' stopColor='#C44AF1'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint3_radial_5179_7940'
@@ -937,10 +939,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(52.9937 20.0992) rotate(135) scale(49.9836)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FFBDC0'></stop>
-                      <stop offset='0.666667' stop-color='#F89DC6'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FFBDC0'></stop>
+                      <stop offset='0.666667' stopColor='#F89DC6'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint4_radial_5179_7940'
@@ -950,12 +952,8 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(36.9 39.3) scale(21.3)'
                     >
-                      <stop stop-color='white'></stop>
-                      <stop
-                        offset='1'
-                        stop-color='white'
-                        stop-opacity='0'
-                      ></stop>
+                      <stop stopColor='white'></stop>
+                      <stop offset='1' stopColor='white' stopOpacity='0'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint5_radial_5179_7940'
@@ -965,9 +963,9 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(31.2 32.1016) rotate(39.5226) scale(15.5567)'
                     >
-                      <stop stop-color='#EF7744'></stop>
-                      <stop offset='0.2406' stop-color='#E50914'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#EF7744'></stop>
+                      <stop offset='0.2406' stopColor='#E50914'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint6_radial_5179_7940'
@@ -977,12 +975,8 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(50.7 21.3) rotate(-180) scale(30)'
                     >
-                      <stop stop-color='white'></stop>
-                      <stop
-                        offset='1'
-                        stop-color='white'
-                        stop-opacity='0'
-                      ></stop>
+                      <stop stopColor='white'></stop>
+                      <stop offset='1' stopColor='white' stopOpacity='0'></stop>
                     </radialGradient>
                   </defs>
                 </svg>
@@ -1040,8 +1034,8 @@ export default function Welcome(): React.JSX.Element {
                     ></path>
                     <path
                       id='Vector_9'
-                      fill-rule='evenodd'
-                      clip-rule='evenodd'
+                      fillRule='evenodd'
+                      clipRule='evenodd'
                       d='M20.0576 9.60156L21.479 11.7187L24 11.0654L22.3575 13.0272L23.7789 15.1444L21.3424 14.2397L19.7 16.2016L19.8365 13.6806L17.4 12.7759L19.9209 12.1225L20.0576 9.60156ZM58.776 52.8016L58.9623 56.4685L62.4 57.4188L59.0774 58.7347L59.2637 62.4016L57.0239 59.548L53.7014 60.8638L55.6397 57.7843L53.4 54.9307L56.8377 55.8811L58.776 52.8016ZM15.206 24.2101L15.8768 21.0016L13.4793 23.1964L10.6853 21.5563L11.9975 24.553L9.59998 26.7478L12.8085 26.405L14.1207 29.4016L14.7915 26.1931L18 25.8502L15.206 24.2101Z'
                       fill='url(#paint8_linear_5179_1664)'
                     ></path>
@@ -1055,10 +1049,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(36.6875 32.7016) rotate(135) scale(34.9134)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint1_radial_5179_1664'
@@ -1068,10 +1062,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(42.5937 27.2992) rotate(135) scale(44.5477 44.5279)'
                     >
-                      <stop stop-color='#EF7744'></stop>
-                      <stop offset='0.333333' stop-color='#E50914'></stop>
-                      <stop offset='0.666667' stop-color='#A70D53'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#EF7744'></stop>
+                      <stop offset='0.333333' stopColor='#E50914'></stop>
+                      <stop offset='0.666667' stopColor='#A70D53'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint2_radial_5179_1664'
@@ -1081,10 +1075,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(42.3 29.106) rotate(135) scale(31.8127)'
                     >
-                      <stop stop-color='#FB540D'></stop>
-                      <stop offset='0.333333' stop-color='#E50914'></stop>
-                      <stop offset='0.666667' stop-color='#A70D53'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#FB540D'></stop>
+                      <stop offset='0.333333' stopColor='#E50914'></stop>
+                      <stop offset='0.666667' stopColor='#A70D53'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint3_radial_5179_1664'
@@ -1094,10 +1088,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(57.675 14.7078) rotate(134.326) scale(24.0433 24.0367)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FFBDC0'></stop>
-                      <stop offset='0.666667' stop-color='#F89DC6'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FFBDC0'></stop>
+                      <stop offset='0.666667' stopColor='#F89DC6'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint4_radial_5179_1664'
@@ -1107,9 +1101,9 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(52.1305 21.273) rotate(141.875) scale(9.87138 12.8159)'
                     >
-                      <stop offset='0.307292' stop-color='#F89DC6'></stop>
-                      <stop offset='0.645392' stop-color='#E75094'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop offset='0.307292' stopColor='#F89DC6'></stop>
+                      <stop offset='0.645392' stopColor='#E75094'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint5_radial_5179_1664'
@@ -1119,12 +1113,8 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(55.8 15.6) rotate(135) scale(13.1522)'
                     >
-                      <stop stop-color='white'></stop>
-                      <stop
-                        offset='1'
-                        stop-color='white'
-                        stop-opacity='0'
-                      ></stop>
+                      <stop stopColor='white'></stop>
+                      <stop offset='1' stopColor='white' stopOpacity='0'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint6_radial_5179_1664'
@@ -1134,12 +1124,8 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(49.2362 22.9648) rotate(131.079) scale(5.08644 6.006)'
                     >
-                      <stop stop-color='white'></stop>
-                      <stop
-                        offset='1'
-                        stop-color='white'
-                        stop-opacity='0'
-                      ></stop>
+                      <stop stopColor='white'></stop>
+                      <stop offset='1' stopColor='white' stopOpacity='0'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint7_radial_5179_1664'
@@ -1149,11 +1135,11 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(36.8758 29.1353) rotate(137.622) scale(13.5764)'
                     >
-                      <stop stop-color='#FFA984'></stop>
+                      <stop stopColor='#FFA984'></stop>
                       <stop
                         offset='1'
-                        stop-color='#F7636B'
-                        stop-opacity='0'
+                        stopColor='#F7636B'
+                        stopOpacity='0'
                       ></stop>
                     </radialGradient>
                     <linearGradient
@@ -1164,10 +1150,10 @@ export default function Welcome(): React.JSX.Element {
                       y2='48.3016'
                       gradientUnits='userSpaceOnUse'
                     >
-                      <stop stop-color='#EF7744'></stop>
-                      <stop offset='0.333333' stop-color='#E50914'></stop>
-                      <stop offset='0.666667' stop-color='#A70D53'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#EF7744'></stop>
+                      <stop offset='0.333333' stopColor='#E50914'></stop>
+                      <stop offset='0.666667' stopColor='#A70D53'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </linearGradient>
                   </defs>
                 </svg>
@@ -1244,10 +1230,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(39.075 17.6882) rotate(135) scale(32.8097)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint1_radial_5179_7919'
@@ -1257,10 +1243,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(62.4 8.70157) rotate(133.87) scale(75.3216)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FFBDC0'></stop>
-                      <stop offset='0.666667' stop-color='#F89DC6'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FFBDC0'></stop>
+                      <stop offset='0.666667' stopColor='#F89DC6'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint2_radial_5179_7919'
@@ -1270,10 +1256,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(60.3 11.1008) rotate(133.939) scale(68.7426 55.9547)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint3_radial_5179_7919'
@@ -1283,10 +1269,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(60.3 11.1008) rotate(133.939) scale(68.7426 55.9547)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint4_radial_5179_7919'
@@ -1296,10 +1282,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(60.3 11.0994) rotate(133.939) scale(68.7426 55.9548)'
                     >
-                      <stop stop-color='#99421D'></stop>
-                      <stop offset='0.333333' stop-color='#99161D'></stop>
-                      <stop offset='0.666667' stop-color='#7D1845'></stop>
-                      <stop offset='1' stop-color='#59216E'></stop>
+                      <stop stopColor='#99421D'></stop>
+                      <stop offset='0.333333' stopColor='#99161D'></stop>
+                      <stop offset='0.666667' stopColor='#7D1845'></stop>
+                      <stop offset='1' stopColor='#59216E'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint5_radial_5179_7919'
@@ -1309,10 +1295,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(39.6 27.9016) rotate(135) scale(23.3345)'
                     >
-                      <stop stop-color='#FFA984'></stop>
-                      <stop offset='0.333333' stop-color='#FF787F'></stop>
-                      <stop offset='0.666667' stop-color='#F45FA2'></stop>
-                      <stop offset='1' stop-color='#C44AF1'></stop>
+                      <stop stopColor='#FFA984'></stop>
+                      <stop offset='0.333333' stopColor='#FF787F'></stop>
+                      <stop offset='0.666667' stopColor='#F45FA2'></stop>
+                      <stop offset='1' stopColor='#C44AF1'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint6_radial_5179_7919'
@@ -1322,10 +1308,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(61.8 29.7016) rotate(135) scale(43.2749)'
                     >
-                      <stop stop-color='#EF7744'></stop>
-                      <stop offset='0.333333' stop-color='#E50914'></stop>
-                      <stop offset='0.666667' stop-color='#A70D53'></stop>
-                      <stop offset='1' stop-color='#792A95'></stop>
+                      <stop stopColor='#EF7744'></stop>
+                      <stop offset='0.333333' stopColor='#E50914'></stop>
+                      <stop offset='0.666667' stopColor='#A70D53'></stop>
+                      <stop offset='1' stopColor='#792A95'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint7_radial_5179_7919'
@@ -1335,10 +1321,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(62.1 11.1008) rotate(137.146) scale(73.6614 60.3576)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FDF6F6'></stop>
-                      <stop offset='0.666667' stop-color='#FADCE9'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FDF6F6'></stop>
+                      <stop offset='0.666667' stopColor='#FADCE9'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint8_radial_5179_7919'
@@ -1348,10 +1334,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(62.1 11.1008) rotate(137.146) scale(73.6614 60.3576)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FDF6F6'></stop>
-                      <stop offset='0.666667' stop-color='#FADCE9'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FDF6F6'></stop>
+                      <stop offset='0.666667' stopColor='#FADCE9'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                     <radialGradient
                       id='paint9_radial_5179_7919'
@@ -1361,10 +1347,10 @@ export default function Welcome(): React.JSX.Element {
                       gradientUnits='userSpaceOnUse'
                       gradientTransform='translate(62.1 11.1017) rotate(137.146) scale(73.6614 60.3576)'
                     >
-                      <stop stop-color='#FFDCCC'></stop>
-                      <stop offset='0.333333' stop-color='#FDF6F6'></stop>
-                      <stop offset='0.666667' stop-color='#FADCE9'></stop>
-                      <stop offset='1' stop-color='#E4A1FA'></stop>
+                      <stop stopColor='#FFDCCC'></stop>
+                      <stop offset='0.333333' stopColor='#FDF6F6'></stop>
+                      <stop offset='0.666667' stopColor='#FADCE9'></stop>
+                      <stop offset='1' stopColor='#E4A1FA'></stop>
                     </radialGradient>
                   </defs>
                 </svg>
@@ -1396,8 +1382,8 @@ export default function Welcome(): React.JSX.Element {
                         role='img'
                       >
                         <path
-                          fill-rule='evenodd'
-                          clip-rule='evenodd'
+                          fillRule='evenodd'
+                          clipRule='evenodd'
                           d='M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z'
                           fill='currentColor'
                         ></path>
@@ -1405,6 +1391,7 @@ export default function Welcome(): React.JSX.Element {
                     </S.FAQBox>
                     <S.FAQContent $isOpen={isOpen}>
                       {item.answer}
+                      {/* 링크 걸린 텍스트가 있는 경우에만 따로 렌더링 */}
                       {item.linkText && item.linkUrl && (
                         <>
                           <a href={item.linkUrl}>{item.linkText}</a>
@@ -1450,8 +1437,8 @@ export default function Welcome(): React.JSX.Element {
                   role='img'
                 >
                   <path
-                    fill-rule='evenodd'
-                    clip-rule='evenodd'
+                    fillRule='evenodd'
+                    clipRule='evenodd'
                     d='M15.5859 12L8.29303 19.2928L9.70725 20.7071L17.7072 12.7071C17.8948 12.5195 18.0001 12.2652 18.0001 12C18.0001 11.7347 17.8948 11.4804 17.7072 11.2928L9.70724 3.29285L8.29303 4.70706L15.5859 12Z'
                     fill='currentColor'
                   ></path>
