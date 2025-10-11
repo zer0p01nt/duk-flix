@@ -15,7 +15,7 @@ npm run dev
 
 
 ## 역할 분담
-<table>
+<table align="center">
   <thead>
     <tr>
       <th>
@@ -62,6 +62,77 @@ npm run dev
         <div>검색 페이지</div>
         <div>헤더 컴포넌트</div>
 </td>
+    </tr>
+  </tbody>
+</table>
+
+ ## 기술 스택
+
+<table align="center">
+  <thead>
+    <tr>
+      <th>
+        용도
+      </th>
+      <th>
+        사용한 스택
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">사용 언어</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">라이브러리</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">
+      </td>
+    </tr>
+    <tr>
+      <td align="center">라우팅</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white">
+      </td>
+    </tr>
+    <tr>
+      <td align="center">번들링</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">데이터 페칭</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"/> <img src="https://img.shields.io/badge/tanstack query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">스타일링</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/StyledComponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">유틸리티</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">배포</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+      </td>
+    </tr>
+    <tr>
+      <td align="center">CI/CD</td>
+      <td align="center">
+        <img src="https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white">
+      </td>
     </tr>
   </tbody>
 </table>
